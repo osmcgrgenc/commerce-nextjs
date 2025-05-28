@@ -5,6 +5,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { NhostProvider } from "@/lib/nhost/provider";
 import { Toaster } from "sonner";
+import { Providers } from './providers'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +23,13 @@ export default function RootLayout({
     <html lang="tr">
       <body className={inter.className}>
         <NhostProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <Providers>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </Providers>
           <Toaster />
         </NhostProvider>
       </body>

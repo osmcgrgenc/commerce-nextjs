@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { DiscountCampaigns } from '@/components/discount-campaigns'
+import { ProductCard } from '@/components/products/product-card'
+import { getDiscountedProducts } from '@/lib/api'
 
 // Bu veri normalde bir API'den gelecek
 const discounts = [
@@ -52,6 +54,45 @@ const discounts = [
     endDate: '2024-03-31',
   },
 ]
+
+// Yükleme durumu için bileşen
+function ProductsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {[...Array(8)].map((_, i) => (
+        <div key={i} className="animate-pulse">
+          <div className="aspect-square rounded-lg bg-gray-200" />
+          <div className="mt-4 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-gray-200" />
+            <div className="h-4 w-1/2 rounded bg-gray-200" />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// İndirimli ürünler bölümü
+async function DiscountedProductsSection() {
+  const products = await getDiscountedProducts()
+
+  return (
+    <section className="container mx-auto px-4">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold">İndirimli Ürünler</h1>
+        <p className="mt-2 text-gray-600">
+          En iyi fırsatları kaçırmayın! Seçili ürünlerde %50&apos;ye varan indirimler
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} {...product} />
+        ))}
+      </div>
+    </section>
+  )
+}
 
 export default function DiscountsPage() {
   const [sortBy, setSortBy] = useState<'discount' | 'price'>('discount')
@@ -142,6 +183,12 @@ export default function DiscountsPage() {
           ))}
         </div>
       </div>
+
+      <main className="py-8">
+        <Suspense fallback={<ProductsSkeleton />}>
+          <DiscountedProductsSection />
+        </Suspense>
+      </main>
     </div>
   )
 } 
