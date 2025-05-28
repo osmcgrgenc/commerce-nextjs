@@ -6,33 +6,28 @@ import Footer from "@/components/layout/footer";
 import { NhostProvider } from "@/lib/nhost/provider";
 import { Toaster } from "sonner";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Liman Design - Modern Mobilya",
-  description: "Modern ve şık mobilya tasarımları",
+  description: "Modern ve şık mobilyalar için doğru adres",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="tr">
-      <body
-        className={`${inter.variable} antialiased`}
-      >
+      <body className={inter.className}>
         <NhostProvider>
-          <div className="min-h-screen flex flex-col">
+          <div className="flex min-h-screen flex-col">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </div>
-          <Toaster position="top-right" />
+          <Toaster />
         </NhostProvider>
       </body>
     </html>

@@ -7,11 +7,11 @@ import { useAuthenticationStatus } from '@nhost/react';
 
 const navigation = [
   { name: 'Anasayfa', href: '/' },
-  { name: 'Kategoriler', href: '/categories' },
-  { name: 'Yeni Gelenler', href: '/new-arrivals' },
-  { name: 'İndirimler', href: '/discounts' },
-  { name: 'Hakkımızda', href: '/about' },
-  { name: 'İletişim', href: '/contact' },
+  { name: 'Kategoriler', href: '/kategoriler' },
+  { name: 'Yeni Gelenler', href: '/yeni-gelenler' },
+  { name: 'İndirimler', href: '/indirimler' },
+  { name: 'Hakkımızda', href: '/hakkimizda' },
+  { name: 'İletişim', href: '/iletisim' },
 ];
 
 export default function Header() {

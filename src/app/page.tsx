@@ -1,7 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
 import { ProductCard } from '@/components/product-card';
 import { CategoryCard } from '@/components/category-card';
+import { HeroSlider } from '@/components/hero-slider';
 
 const categories = [
   {
@@ -37,6 +36,9 @@ const featuredProducts = [
     price: 24999,
     image: '/images/products/kose-koltuk.jpg',
     href: '/urunler/modern-kose-koltuk',
+    category: 'Oturma Grupları',
+    arrivalDate: '2025-01-01',
+    stock: 10,
   },
   {
     id: 2,
@@ -44,6 +46,9 @@ const featuredProducts = [
     price: 34999,
     image: '/images/products/yatak-odasi.jpg',
     href: '/urunler/yatak-odasi-takimi',
+    category: 'Yatak Odası',
+    arrivalDate: '2025-01-01',
+    stock: 10,
   },
   {
     id: 3,
@@ -51,6 +56,9 @@ const featuredProducts = [
     price: 29999,
     image: '/images/products/yemek-odasi.jpg',
     href: '/urunler/yemek-odasi-takimi',
+    category: 'Yemek Odası',
+    arrivalDate: '2025-01-01',
+    stock: 10,
   },
   {
     id: 4,
@@ -58,65 +66,70 @@ const featuredProducts = [
     price: 8999,
     image: '/images/products/calisma-masasi.jpg',
     href: '/urunler/calisma-masasi',
+    category: 'Çalışma Odası',
+    arrivalDate: '2025-01-01',
+    stock: 10,
   },
 ];
 
+const banners = [
+  {
+    id: 1,
+    title: 'Modern ve Şık Mobilyalar',
+    description: 'Evinizi güzelleştirmek için en kaliteli ve şık mobilyalar',
+    image: '/images/hero.jpg',
+    buttonText: 'Koleksiyonu Keşfet',
+    buttonLink: '/kategoriler',
+    isActive: true,
+    order: 1,
+  },
+  {
+    id: 2,
+    title: 'Yeni Sezon Ürünleri',
+    description: 'En yeni tasarımlar ve koleksiyonlar',
+    image: '/images/hero-2.jpg',
+    buttonText: 'Yeni Gelenler',
+    buttonLink: '/yeni-gelenler',
+    isActive: true,
+    order: 2,
+  },
+  {
+    id: 3,
+    title: 'Özel İndirimler',
+    description: 'Seçili ürünlerde %50\'ye varan indirimler',
+    image: '/images/hero-3.jpg',
+    buttonText: 'İndirimleri Gör',
+    buttonLink: '/indirimler',
+    isActive: true,
+    order: 3,
+  },
+]
+
 export default function HomePage() {
   return (
-    <div className="space-y-16 py-8">
-      {/* Hero Section */}
-      <section className="relative h-[600px] overflow-hidden">
-        <Image
-          src="/images/hero.jpg"
-          alt="Liman Design"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
-          <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl">
-            Modern ve Şık Mobilyalar
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg sm:text-xl">
-            Evinizi güzelleştirmek için en kaliteli ve şık mobilyalar
-          </p>
-          <div className="mt-8 flex gap-4">
-            <Link
-              href="/kategoriler"
-              className="rounded-md bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100"
-            >
-              Koleksiyonu Keşfet
-            </Link>
-            <Link
-              href="/hakkimizda"
-              className="rounded-md bg-transparent px-6 py-3 text-sm font-semibold text-white ring-1 ring-inset ring-white hover:bg-white/10"
-            >
-              Hakkımızda
-            </Link>
+    <main>
+      <HeroSlider banners={banners} />
+      <div className="space-y-16 py-8">
+        {/* Categories Section */}
+        <section className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold">Kategoriler</h2>
+          <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Categories Section */}
-      <section className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold">Kategoriler</h2>
-        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Products Section */}
-      <section className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold">Öne Çıkan Ürünler</h2>
-        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-    </div>
+        {/* Featured Products Section */}
+        <section className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold">Öne Çıkan Ürünler</h2>
+          <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }

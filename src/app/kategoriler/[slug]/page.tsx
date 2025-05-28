@@ -4,10 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProductCard } from '@/components/product-card'
-import { useCartStore } from '@/store/cart'
-import { toast } from 'sonner'
 
-// Bu veri normalde bir API'den gelecek
 const categories = [
   {
     id: 1,
@@ -22,6 +19,9 @@ const categories = [
         price: 24999,
         image: '/images/products/kose-koltuk.jpg',
         href: '/urunler/modern-kose-koltuk',
+        category: 'Oturma Grupları',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
       {
         id: 2,
@@ -29,6 +29,9 @@ const categories = [
         price: 34999,
         image: '/images/products/3-2-koltuk.jpg',
         href: '/urunler/3-2-koltuk-takimi',
+        category: 'Oturma Grupları',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
       {
         id: 3,
@@ -36,6 +39,9 @@ const categories = [
         price: 29999,
         image: '/images/products/2-1-koltuk.jpg',
         href: '/urunler/2-1-koltuk-takimi',
+        category: 'Oturma Grupları',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
       {
         id: 4,
@@ -43,6 +49,9 @@ const categories = [
         price: 19999,
         image: '/images/products/kanepe.jpg',
         href: '/urunler/kanepe',
+        category: 'Oturma Grupları',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
     ],
   },
@@ -59,6 +68,9 @@ const categories = [
         price: 34999,
         image: '/images/products/yatak-odasi.jpg',
         href: '/urunler/yatak-odasi-takimi',
+        category: 'Yatak Odası',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
       {
         id: 6,
@@ -66,6 +78,9 @@ const categories = [
         price: 14999,
         image: '/images/products/gardolap.jpg',
         href: '/urunler/gardolap',
+        category: 'Yatak Odası',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
       {
         id: 7,
@@ -73,6 +88,9 @@ const categories = [
         price: 9999,
         image: '/images/products/yatak.jpg',
         href: '/urunler/yatak',
+        category: 'Yatak Odası',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
       {
         id: 8,
@@ -80,6 +98,9 @@ const categories = [
         price: 1999,
         image: '/images/products/gece-lambasi.jpg',
         href: '/urunler/gece-lambasi',
+        category: 'Yatak Odası',
+        arrivalDate: '2025-01-01',
+        stock: 10,
       },
     ],
   },
@@ -101,8 +122,9 @@ interface CategoryPageProps {
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const [sortBy, setSortBy] = useState('newest')
-  const category = categories.find((c) => c.slug === params.slug)
+  const [sortBy, setSortBy] = useState('newest');
+  console.log(params);
+  const category = categories.find((c) => c.slug === params.slug);
 
   if (!category) {
     return (
@@ -116,23 +138,23 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   const sortedProducts = [...category.products].sort((a, b) => {
     switch (sortBy) {
       case 'price-asc':
-        return a.price - b.price
+        return a.price - b.price;
       case 'price-desc':
-        return b.price - a.price
+        return b.price - a.price;
       case 'name-asc':
-        return a.name.localeCompare(b.name)
+        return a.name.localeCompare(b.name);
       case 'name-desc':
-        return b.name.localeCompare(a.name)
+        return b.name.localeCompare(a.name);
       default:
-        return 0
+        return 0;
     }
-  })
+  });
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -176,9 +198,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       {/* Ürün Listesi */}
       <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
         {sortedProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} {...product} />
         ))}
       </div>
     </div>
-  )
-} 
+  );
+}

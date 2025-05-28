@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Heart, Share2, Truck, Shield, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
+import { ProductReviews } from '@/components/product-reviews'
 
 // Bu veri normalde bir API'den gelecek
 const product = {
@@ -37,6 +38,40 @@ const product = {
     { name: 'Lacivert', value: '#000080' },
   ],
   stock: 5,
+  reviews: {
+    averageRating: 4.5,
+    totalReviews: 128,
+    items: [
+      {
+        id: 1,
+        user: {
+          name: 'Ahmet Yılmaz',
+          avatar: '/images/avatars/user-1.jpg',
+        },
+        rating: 5,
+        date: '15 Şubat 2024',
+        title: 'Harika bir ürün',
+        comment: 'Çok rahat ve kaliteli bir koltuk. Beklentilerimin üzerinde bir ürün.',
+        likes: 12,
+        dislikes: 0,
+        verified: true,
+      },
+      {
+        id: 2,
+        user: {
+          name: 'Ayşe Demir',
+          avatar: '/images/avatars/user-2.jpg',
+        },
+        rating: 4,
+        date: '10 Şubat 2024',
+        title: 'Güzel ama biraz pahalı',
+        comment: 'Kalitesi çok iyi ama fiyatı biraz yüksek. Yine de memnunum.',
+        likes: 8,
+        dislikes: 2,
+        verified: true,
+      },
+    ],
+  },
 }
 
 export default function ProductPage() {
@@ -227,6 +262,16 @@ export default function ProductPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Yorumlar Bölümü */}
+        <div className="mt-16">
+          <ProductReviews
+            productId={product.id}
+            averageRating={product.reviews.averageRating}
+            totalReviews={product.reviews.totalReviews}
+            reviews={product.reviews.items}
+          />
         </div>
       </div>
     </div>

@@ -61,7 +61,7 @@ export default function ContactPage() {
         subject: '',
         message: '',
       })
-    } catch (error) {
+    } catch {
       toast.error('Mesajınız gönderilirken bir hata oluştu')
     } finally {
       setIsSubmitting(false)
