@@ -19,14 +19,18 @@
     "@tiptap/pm": "^2.2.4",
     "@tiptap/react": "^2.2.4",
     "@tiptap/starter-kit": "^2.2.4",
+    "lucide-react": "^0.511.0",
     "next": "^15.3.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zod": "^3.25.31"
+    "sonner": "^2.0.3",
+    "zod": "^3.25.31",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15.3.2",
-    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

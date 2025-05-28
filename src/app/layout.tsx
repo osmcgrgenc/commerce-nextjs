@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers/nhost-provider";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import { NhostProvider } from "@/lib/nhost/provider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -9,21 +12,28 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "E-Ticaret Admin",
-  description: "Performanslı ve güvenli Next.js e-ticaret admin paneli",
+  title: "Liman Design - Modern Mobilya",
+  description: "Modern ve şık mobilya tasarımları",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="tr">
       <body
         className={`${inter.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <NhostProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
+          <Toaster position="top-right" />
+        </NhostProvider>
       </body>
     </html>
   );
