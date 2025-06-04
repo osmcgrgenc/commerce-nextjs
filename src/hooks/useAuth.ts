@@ -1,24 +1,24 @@
-import { useAuthenticationStatus, useSignInEmailPassword, useSignOut } from '@nhost/nextjs'
-import { useRouter } from 'next/navigation'
+import { useAuthenticationStatus, useSignInEmailPassword, useSignOut } from '@nhost/nextjs';
+import { useRouter } from 'next/navigation';
 
 export function useAuth() {
-  const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
-  const { signInEmailPassword, isLoading: isSigningIn } = useSignInEmailPassword()
-  const { signOut, isSuccess: isSigningOut } = useSignOut()
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
+  const { signInEmailPassword, isLoading: isSigningIn } = useSignInEmailPassword();
+  const { signOut, isSuccess: isSigningOut } = useSignOut();
 
   const login = async (email: string, password: string) => {
-    const { error } = await signInEmailPassword(email, password)
+    const { error } = await signInEmailPassword(email, password);
     if (error) {
-      throw error
+      throw error;
     }
-    router.push('/')
-  }
+    router.push('/');
+  };
 
   const logout = async () => {
-    await signOut()
-    router.push('/')
-  }
+    await signOut();
+    router.push('/');
+  };
 
   return {
     isAuthenticated,
@@ -27,5 +27,5 @@ export function useAuth() {
     isSigningOut,
     login,
     logout,
-  }
-} 
+  };
+}

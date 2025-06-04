@@ -1,22 +1,22 @@
-"use client";
-import { useState, useEffect } from "react";
-import { getOrders } from "@/lib/nhost/queries";
-import { updateOrderStatus } from "@/lib/nhost/mutations";
-import { Order } from "@/lib/nhost/types";
+'use client';
+import { useState, useEffect } from 'react';
+import { getOrders } from '@/lib/nhost/queries';
+import { updateOrderStatus } from '@/lib/nhost/mutations';
+import { Order } from '@/lib/nhost/types';
 
 export default function OrderList() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const loadOrders = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getOrders();
       setOrders(data);
     } catch {
-      setError("Siparişler yüklenemedi.");
+      setError('Siparişler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -28,10 +28,10 @@ export default function OrderList() {
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
-      await updateOrderStatus( id, newStatus );
+      await updateOrderStatus(id, newStatus);
       await loadOrders();
     } catch {
-      alert("Sipariş durumu güncellenemedi.");
+      alert('Sipariş durumu güncellenemedi.');
     }
   };
 
@@ -41,7 +41,7 @@ export default function OrderList() {
 
   return (
     <ul className="divide-y divide-gray-200">
-      {orders.map((order) => (
+      {orders.map(order => (
         <li key={order.id} className="py-2 flex justify-between items-center">
           <div>
             <span className="font-semibold">Sipariş ID: {order.id}</span>
@@ -52,7 +52,7 @@ export default function OrderList() {
           </div>
           <select
             value={order.status}
-            onChange={(e) => handleStatusChange(order.id, e.target.value)}
+            onChange={e => handleStatusChange(order.id, e.target.value)}
             className="border p-1 rounded"
           >
             <option value="Hazırlanıyor">Hazırlanıyor</option>
@@ -64,4 +64,4 @@ export default function OrderList() {
       ))}
     </ul>
   );
-} 
+}

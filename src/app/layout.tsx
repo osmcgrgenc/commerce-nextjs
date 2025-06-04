@@ -1,37 +1,30 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from "@/components/layout/header";
-import Footer from "@/components/layout/footer";
-import { NhostProvider } from "@/lib/nhost/provider";
-import { Toaster } from "sonner";
-import { Providers } from './providers'
+import { Suspense } from 'react';
+import { Inter } from 'next/font/google';
+import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/react';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import { Providers } from './providers';
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: "Liman Design - Modern Mobilya",
-  description: "Modern ve şık mobilyalar için doğru adres",
+export const metadata = {
+  title: 'Liman Design',
+  description: 'Modern mobilya ve dekorasyon ürünleri',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
+      <head>
+        <GoogleAnalytics gaId="G-XXXXXXXXXX" />
+      </head>
       <body className={inter.className}>
-        <NhostProvider>
-          <Providers>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </Providers>
+        <Providers>
+          {children}
           <Toaster />
-        </NhostProvider>
+          <Analytics />
+        </Providers>
       </body>
     </html>
   );

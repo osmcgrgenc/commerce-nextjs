@@ -1,5 +1,16 @@
 import nhost from './client';
-import { GraphQLResponse, Page, Post, Comment, Category, Tag, Product, Order, Customer, Settings } from './types';
+import {
+  GraphQLResponse,
+  Page,
+  Post,
+  Comment,
+  Category,
+  Tag,
+  Product,
+  Order,
+  Customer,
+  Settings,
+} from './types';
 
 export async function getPages(): Promise<Page[]> {
   const { data, error } = await nhost.graphql.request<GraphQLResponse<{ pages: Page[] }>>(
@@ -329,7 +340,9 @@ export async function getSettings(): Promise<Settings | null> {
 }
 
 export async function getOrderStatusStats(): Promise<Record<string, number>> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ orders: { status: string }[] }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ orders: { status: string }[] }>
+  >(
     `
     query GetOrderStatusStats {
       orders {
@@ -340,12 +353,12 @@ export async function getOrderStatusStats(): Promise<Record<string, number>> {
   );
 
   if (error) throw error;
-  
+
   const stats: Record<string, number> = {};
   data.data.orders?.forEach(order => {
     stats[order.status] = (stats[order.status] || 0) + 1;
   });
-  
+
   return stats;
 }
 
@@ -396,7 +409,7 @@ export async function getSalesStats() {
     totalOrders: orders.length,
     totalRevenue: orders.reduce((sum, order) => sum + order.total, 0),
     last30DaysOrders: last30DaysOrders.length,
-    last30DaysRevenue
+    last30DaysRevenue,
   };
 }
 
@@ -421,6 +434,6 @@ export async function getCustomerStats() {
 
   return {
     totalCustomers: customers.length,
-    newCustomers: newCustomers.length
+    newCustomers: newCustomers.length,
   };
-} 
+}

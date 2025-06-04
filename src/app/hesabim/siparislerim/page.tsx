@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useAuthenticationStatus } from '@nhost/nextjs'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Package, ChevronRight } from 'lucide-react'
+import { useAuthenticationStatus } from '@nhost/nextjs';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Package, ChevronRight } from 'lucide-react';
 
 // Bu veri normalde bir API'den gelecek
 const orders = [
@@ -37,23 +37,23 @@ const orders = [
       },
     ],
   },
-]
+];
 
 export default function OrdersPage() {
-  const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
 
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">Yükleniyor...</div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
-    router.push('/auth/login')
-    return null
+    router.push('/auth/login');
+    return null;
   }
 
   return (
@@ -61,9 +61,7 @@ export default function OrdersPage() {
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-2xl font-bold leading-6 text-gray-900">
-              Siparişlerim
-            </h3>
+            <h3 className="text-2xl font-bold leading-6 text-gray-900">Siparişlerim</h3>
 
             <div className="mt-8 flow-root">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -102,7 +100,7 @@ export default function OrdersPage() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
-                        {orders.map((order) => (
+                        {orders.map(order => (
                           <tr key={order.id}>
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                               #{order.id}
@@ -148,5 +146,5 @@ export default function OrdersPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

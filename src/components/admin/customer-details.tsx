@@ -1,8 +1,8 @@
-"use client";
-import { useState, useEffect } from "react";
-import { updateCustomer } from "@/lib/nhost/mutations";
-import { getCustomers } from "@/lib/nhost/queries";
-import { Customer } from "@/lib/nhost/types";
+'use client';
+import { useState, useEffect } from 'react';
+import { updateCustomer } from '@/lib/nhost/mutations';
+import { getCustomers } from '@/lib/nhost/queries';
+import { Customer } from '@/lib/nhost/types';
 
 type Order = {
   id: string;
@@ -19,12 +19,12 @@ type CustomerDetails = Customer & {
 export default function CustomerDetails({ id }: { id: string }) {
   const [customer, setCustomer] = useState<CustomerDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    display_name: "",
-    phone_number: "",
+    display_name: '',
+    phone_number: '',
   });
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function CustomerDetails({ id }: { id: string }) {
 
   const loadCustomerDetails = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const customers = await getCustomers();
       const data = customers.find(c => c.id === id);
@@ -41,16 +41,16 @@ export default function CustomerDetails({ id }: { id: string }) {
         const customerDetails: CustomerDetails = {
           ...data,
           metadata: {},
-          orders: []
+          orders: [],
         };
         setCustomer(customerDetails);
         setFormData({
-          display_name: data.display_name || "",
-          phone_number: data.phone_number || "",
+          display_name: data.display_name || '',
+          phone_number: data.phone_number || '',
         });
       }
     } catch {
-      setError("Müşteri detayları yüklenemedi.");
+      setError('Müşteri detayları yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -58,24 +58,24 @@ export default function CustomerDetails({ id }: { id: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
     try {
       await updateCustomer(id, {
         display_name: formData.display_name,
         phone_number: formData.phone_number,
       });
-      setSuccess("Müşteri bilgileri güncellendi.");
+      setSuccess('Müşteri bilgileri güncellendi.');
       setIsEditing(false);
       await loadCustomerDetails();
     } catch {
-      setError("Müşteri bilgileri güncellenemedi.");
+      setError('Müşteri bilgileri güncellenemedi.');
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
@@ -97,7 +97,7 @@ export default function CustomerDetails({ id }: { id: string }) {
             onClick={() => setIsEditing(!isEditing)}
             className="text-indigo-600 hover:text-indigo-900"
           >
-            {isEditing ? "İptal" : "Düzenle"}
+            {isEditing ? 'İptal' : 'Düzenle'}
           </button>
         </div>
 
@@ -140,11 +140,11 @@ export default function CustomerDetails({ id }: { id: string }) {
             </div>
             <div>
               <span className="text-sm font-medium text-gray-500">Ad Soyad</span>
-              <p className="mt-1">{customer.display_name || "-"}</p>
+              <p className="mt-1">{customer.display_name || '-'}</p>
             </div>
             <div>
               <span className="text-sm font-medium text-gray-500">Telefon</span>
-              <p className="mt-1">{customer.phone_number || "-"}</p>
+              <p className="mt-1">{customer.phone_number || '-'}</p>
             </div>
             <div>
               <span className="text-sm font-medium text-gray-500">Kayıt Tarihi</span>
@@ -176,7 +176,7 @@ export default function CustomerDetails({ id }: { id: string }) {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {customer.orders.map((order) => (
+                {customer.orders.map(order => (
                   <tr key={order.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {order.id}
@@ -201,4 +201,4 @@ export default function CustomerDetails({ id }: { id: string }) {
       </div>
     </div>
   );
-} 
+}

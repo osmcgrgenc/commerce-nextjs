@@ -1,4 +1,4 @@
-import CommentList from "@/components/admin/comment-list";
+import CommentList from '@/components/admin/comment-list';
 
 type Props = {
   params: {
@@ -13,4 +13,4 @@ export default function PostCommentsPage({ params }: Props) {
       <CommentList postId={params.id} />
     </div>
   );
-} 
+}

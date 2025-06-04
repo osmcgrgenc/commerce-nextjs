@@ -1,6 +1,6 @@
-"use client";
-import { useState, useEffect } from "react";
-import { getSalesStats, getCustomerStats } from "@/lib/nhost/queries";
+'use client';
+import { useState, useEffect } from 'react';
+import { getSalesStats, getCustomerStats } from '@/lib/nhost/queries';
 
 type SalesStats = {
   totalOrders: number;
@@ -18,7 +18,7 @@ export default function StatsCards() {
   const [salesStats, setSalesStats] = useState<SalesStats | null>(null);
   const [customerStats, setCustomerStats] = useState<CustomerStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadStats();
@@ -26,16 +26,13 @@ export default function StatsCards() {
 
   const loadStats = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
-      const [sales, customers] = await Promise.all([
-        getSalesStats(),
-        getCustomerStats(),
-      ]);
+      const [sales, customers] = await Promise.all([getSalesStats(), getCustomerStats()]);
       setSalesStats(sales);
       setCustomerStats(customers);
     } catch {
-      setError("İstatistikler yüklenemedi.");
+      setError('İstatistikler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -52,9 +49,7 @@ export default function StatsCards() {
         <p className="mt-2 text-3xl font-bold text-indigo-600">
           ₺{salesStats.totalRevenue.toLocaleString()}
         </p>
-        <p className="mt-1 text-sm text-gray-500">
-          {salesStats.totalOrders} sipariş
-        </p>
+        <p className="mt-1 text-sm text-gray-500">{salesStats.totalOrders} sipariş</p>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
@@ -62,16 +57,12 @@ export default function StatsCards() {
         <p className="mt-2 text-3xl font-bold text-indigo-600">
           ₺{salesStats.last30DaysRevenue.toLocaleString()}
         </p>
-        <p className="mt-1 text-sm text-gray-500">
-          {salesStats.last30DaysOrders} sipariş
-        </p>
+        <p className="mt-1 text-sm text-gray-500">{salesStats.last30DaysOrders} sipariş</p>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-medium text-gray-900">Toplam Müşteri</h3>
-        <p className="mt-2 text-3xl font-bold text-indigo-600">
-          {customerStats.totalCustomers}
-        </p>
+        <p className="mt-2 text-3xl font-bold text-indigo-600">{customerStats.totalCustomers}</p>
         <p className="mt-1 text-sm text-gray-500">
           Son 30 günde {customerStats.newCustomers} yeni müşteri
         </p>
@@ -83,10 +74,10 @@ export default function StatsCards() {
           ₺
           {salesStats.totalOrders > 0
             ? (salesStats.totalRevenue / salesStats.totalOrders).toFixed(2)
-            : "0.00"}
+            : '0.00'}
         </p>
         <p className="mt-1 text-sm text-gray-500">Sipariş başına</p>
       </div>
     </div>
   );
-} 
+}

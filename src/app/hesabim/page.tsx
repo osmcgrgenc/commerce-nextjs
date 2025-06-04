@@ -1,33 +1,33 @@
-'use client'
+'use client';
 
-import { useAuthenticationStatus, useUserData } from '@nhost/nextjs'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { User, Package, Heart, MapPin, LogOut } from 'lucide-react'
+import { useAuthenticationStatus, useUserData } from '@nhost/nextjs';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { User, Package, Heart, MapPin, LogOut } from 'lucide-react';
 
 const navigation = [
   { name: 'Profil Bilgileri', href: '/hesabim/profil', icon: User },
   { name: 'Siparişlerim', href: '/hesabim/siparislerim', icon: Package },
   { name: 'Favorilerim', href: '/hesabim/favorilerim', icon: Heart },
   { name: 'Adreslerim', href: '/hesabim/adreslerim', icon: MapPin },
-]
+];
 
 export default function AccountPage() {
-  const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
-  const user = useUserData()
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
+  const user = useUserData();
 
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">Yükleniyor...</div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
-    router.push('/auth/login')
-    return null
+    router.push('/auth/login');
+    return null;
   }
 
   return (
@@ -37,12 +37,8 @@ export default function AccountPage() {
           <div className="px-4 py-5 sm:p-6">
             <div className="sm:flex sm:items-center sm:justify-between">
               <div>
-                <h3 className="text-2xl font-bold leading-6 text-gray-900">
-                  Hesabım
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  {user?.email}
-                </p>
+                <h3 className="text-2xl font-bold leading-6 text-gray-900">Hesabım</h3>
+                <p className="mt-1 text-sm text-gray-500">{user?.email}</p>
               </div>
               <div className="mt-4 sm:mt-0">
                 <button
@@ -59,7 +55,7 @@ export default function AccountPage() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {navigation.map((item) => (
+              {navigation.map(item => (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -79,5 +75,5 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -1,27 +1,27 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { Product } from '@/lib/api'
+import Image from 'next/image';
+import Link from 'next/link';
+import { Product } from '@/lib/api';
 
 export interface ProductCardProps extends Product {
-  priority?: boolean
+  priority?: boolean;
 }
 
-export function ProductCard({ 
-  name, 
-  price, 
-  image, 
-  href, 
-  category, 
-  isNew, 
-  stock, 
+export function ProductCard({
+  name,
+  price,
+  image,
+  href,
+  category,
+  isNew,
+  stock,
   discount,
-  priority = false 
+  priority = false,
 }: ProductCardProps) {
   // Fiyat formatlamasını memoize et
   const formattedPrice = new Intl.NumberFormat('tr-TR', {
     style: 'currency',
     currency: 'TRY',
-  }).format(price)
+  }).format(price);
 
   return (
     <div className="group relative">
@@ -63,21 +63,13 @@ export function ProductCard({
           <p className="mt-1 text-sm text-gray-500">{category}</p>
         </div>
         <div className="text-right">
-          <p className="text-sm font-medium text-gray-900">
-            {formattedPrice}
-          </p>
+          <p className="text-sm font-medium text-gray-900">{formattedPrice}</p>
           {stock <= 5 && stock > 0 && (
-            <p className="mt-1 text-xs text-orange-600">
-              Son {stock} ürün
-            </p>
+            <p className="mt-1 text-xs text-orange-600">Son {stock} ürün</p>
           )}
-          {stock === 0 && (
-            <p className="mt-1 text-xs text-red-600">
-              Stokta yok
-            </p>
-          )}
+          {stock === 0 && <p className="mt-1 text-xs text-red-600">Stokta yok</p>}
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

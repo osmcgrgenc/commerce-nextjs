@@ -142,8 +142,8 @@ export interface Settings {
   favicon_url?: string;
   contact_email?: string;
   contact_phone?: string;
-  theme?: "light" | "dark";
-  currency?: "TRY" | "USD" | "EUR";
+  theme?: 'light' | 'dark';
+  currency?: 'TRY' | 'USD' | 'EUR';
   tax_rate?: number;
   social_media?: {
     facebook?: string;
@@ -201,4 +201,4 @@ export type GraphQLData = {
   update_settings_by_pk?: Settings;
 };
 
-export type GraphQLResponseData = GraphQLResponse<GraphQLData>; 
+export type GraphQLResponseData = GraphQLResponse<GraphQLData>;

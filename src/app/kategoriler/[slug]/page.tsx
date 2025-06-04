@@ -1,9 +1,12 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { ProductCard } from '@/components/products/product-card'
+import { useState, Suspense } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ProductCard } from '@/components/products/product-card';
+import { VirtualizedProductList } from '@/components/products/virtualized-product-list';
+import { getCategoryDetails } from '@/lib/api';
+import { generateMetadata } from '@/lib/metadata';
 
 const categories = [
   {
@@ -105,7 +108,7 @@ const categories = [
     ],
   },
   // Diğer kategoriler...
-]
+];
 
 const sortOptions = [
   { name: 'En Yeniler', value: 'newest' },
@@ -113,35 +116,43 @@ const sortOptions = [
   { name: 'Fiyat (Yüksekten Düşüğe)', value: 'price-desc' },
   { name: 'İsim (A-Z)', value: 'name-asc' },
   { name: 'İsim (Z-A)', value: 'name-desc' },
-]
+];
 
 interface CategoryPageProps {
   params: {
-    slug: string
-  }
+    slug: string;
+  };
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const [sortBy, setSortBy] = useState('newest');
-  console.log(params);
-  const category = categories.find((c) => c.slug === params.slug);
+export const metadata = generateMetadata({
+  title: 'Kategoriler',
+  description:
+    'Liman Design ürün kategorileri. Mobilya, dekorasyon, aydınlatma ve daha fazlası. Her tarza uygun ürünler ve çözümler.',
+  image: '/images/categories-og.jpg',
+});
 
-  if (!category) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold">Kategori bulunamadı</h1>
-          <p className="mt-4">
-            <Link href="/kategoriler" className="text-indigo-600 hover:text-indigo-500">
-              Tüm kategorilere dön
-            </Link>
-          </p>
+// Yükleme durumu için bileşen
+function ProductsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {[...Array(8)].map((_, i) => (
+        <div key={i} className="animate-pulse">
+          <div className="aspect-square rounded-lg bg-gray-200" />
+          <div className="mt-4 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-gray-200" />
+            <div className="h-4 w-1/2 rounded bg-gray-200" />
+          </div>
         </div>
-      </div>
-    );
-  }
+      ))}
+    </div>
+  );
+}
 
-  const sortedProducts = [...category.products].sort((a, b) => {
+// Ürün listesi bileşeni
+async function ProductList({ slug, sortBy }: { slug: string; sortBy: string }) {
+  const { category, products } = await getCategoryDetails(slug);
+
+  const sortedProducts = [...products].sort((a, b) => {
     switch (sortBy) {
       case 'price-asc':
         return a.price - b.price;
@@ -157,50 +168,47 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   });
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      {/* Kategori Başlığı */}
-      <div className="relative h-[300px] overflow-hidden rounded-lg">
-        <Image
-          src={category.image}
-          alt={category.name}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
-          <h1 className="text-4xl font-bold">{category.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg">{category.description}</p>
-        </div>
-      </div>
+    <div className="mt-8">
+      <VirtualizedProductList
+        products={sortedProducts}
+        width={1200}
+        height={800}
+        columnCount={4}
+        columnWidth={300}
+        rowHeight={400}
+      />
+    </div>
+  );
+}
 
-      {/* Sıralama ve Filtreler */}
-      <div className="mt-8 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <label htmlFor="sort" className="text-sm font-medium text-gray-700">
-            Sırala:
-          </label>
-          <select
-            id="sort"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="rounded-md border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+// Kategori başlığı bileşeni
+async function CategoryHeader({ slug }: { slug: string }) {
+  const { category } = await getCategoryDetails(slug);
 
-      {/* Ürün Listesi */}
-      <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-        {sortedProducts.map((product) => (
-          <ProductCard key={product.id} {...product} />
-        ))}
+  return (
+    <div className="relative h-[300px] overflow-hidden rounded-lg">
+      <Image src={category.image} alt={category.name} fill className="object-cover" priority />
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
+        <h1 className="text-4xl font-bold">{category.name}</h1>
+        <p className="mt-4 max-w-2xl text-lg">{category.description}</p>
       </div>
     </div>
+  );
+}
+
+export default function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { sort?: string };
+}) {
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <Suspense fallback={<ProductsSkeleton />}>
+        <ProductList slug={params.slug} sortBy={searchParams.sort || 'default'} />
+      </Suspense>
+    </main>
   );
 }

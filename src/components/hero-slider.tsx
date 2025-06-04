@@ -1,33 +1,33 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Banner } from '@/lib/api'
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Banner } from '@/lib/api';
 
 interface HeroSliderProps {
-  banners: Banner[]
+  banners: Banner[];
 }
 
 export function HeroSlider({ banners }: HeroSliderProps) {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % banners.length)
-  }, [banners.length])
+    setCurrentSlide(prev => (prev + 1) % banners.length);
+  }, [banners.length]);
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000)
-    return () => clearInterval(timer)
-  }, [nextSlide])
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
 
   // İlk banner'ı önceden yükle
   useEffect(() => {
     if (banners[0]?.image) {
-      const img = document.createElement('img')
-      img.src = banners[0].image
+      const img = document.createElement('img');
+      img.src = banners[0].image;
     }
-  }, [banners])
+  }, [banners]);
 
   return (
     <div className="relative h-[500px] overflow-hidden">
@@ -51,12 +51,8 @@ export function HeroSlider({ banners }: HeroSliderProps) {
           />
           <div className="absolute inset-0 bg-black/40" />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white">
-            <h2 className="text-4xl font-bold sm:text-5xl md:text-6xl">
-              {banner.title}
-            </h2>
-            <p className="mt-4 max-w-2xl text-lg sm:text-xl">
-              {banner.description}
-            </p>
+            <h2 className="text-4xl font-bold sm:text-5xl md:text-6xl">{banner.title}</h2>
+            <p className="mt-4 max-w-2xl text-lg sm:text-xl">{banner.description}</p>
             <Link
               href={banner.buttonLink}
               className="mt-8 rounded-md bg-white px-6 py-3 text-sm font-medium text-gray-900 hover:bg-gray-100"
@@ -82,5 +78,5 @@ export function HeroSlider({ banners }: HeroSliderProps) {
         ))}
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -1,19 +1,19 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Copy, Check, Clock, Users, Tag, Star } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { Copy, Check, Clock, Users, Tag, Star } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Campaign {
-  id: number
-  title: string
-  description: string
-  type: 'coupon' | 'seasonal' | 'member' | 'bulk'
-  code?: string
-  discount: number
-  minPurchase?: number
-  endDate: string
-  icon: React.ReactNode
+  id: number;
+  title: string;
+  description: string;
+  type: 'coupon' | 'seasonal' | 'member' | 'bulk';
+  code?: string;
+  discount: number;
+  minPurchase?: number;
+  endDate: string;
+  icon: React.ReactNode;
 }
 
 const campaigns: Campaign[] = [
@@ -56,23 +56,23 @@ const campaigns: Campaign[] = [
     endDate: '2024-12-31',
     icon: <Tag className="h-6 w-6" />,
   },
-]
+];
 
 export function DiscountCampaigns() {
-  const [copiedCode, setCopiedCode] = useState<string | null>(null)
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code)
-    setCopiedCode(code)
-    toast.success('Kupon kodu kopyalandı')
-    setTimeout(() => setCopiedCode(null), 2000)
-  }
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    toast.success('Kupon kodu kopyalandı');
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
 
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {campaigns.map((campaign) => (
+          {campaigns.map(campaign => (
             <div
               key={campaign.id}
               className="relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
@@ -102,9 +102,7 @@ export function DiscountCampaigns() {
                 </div>
               )}
               {campaign.minPurchase && (
-                <p className="mt-2 text-sm text-gray-500">
-                  Minimum {campaign.minPurchase} ürün
-                </p>
+                <p className="mt-2 text-sm text-gray-500">Minimum {campaign.minPurchase} ürün</p>
               )}
               <div className="mt-4 flex items-center justify-between">
                 <span className="text-lg font-bold text-indigo-600">%{campaign.discount}</span>
@@ -117,5 +115,5 @@ export function DiscountCampaigns() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

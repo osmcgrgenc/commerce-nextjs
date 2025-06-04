@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,10 +17,7 @@ interface CategoryCardProps {
 
 export const CategoryCard = memo(function CategoryCard({ category }: CategoryCardProps) {
   return (
-    <Link 
-      href={category.href}
-      className="group relative block overflow-hidden rounded-lg"
-    >
+    <Link href={category.href} className="group relative block overflow-hidden rounded-lg">
       <div className="relative aspect-square">
         <Image
           src={category.image}
@@ -34,11 +31,9 @@ export const CategoryCard = memo(function CategoryCard({ category }: CategoryCar
         />
         <div className="absolute inset-0 bg-black/40 transition-opacity group-hover:bg-black/50" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <h3 className="text-xl font-semibold text-white">
-            {category.name}
-          </h3>
+          <h3 className="text-xl font-semibold text-white">{category.name}</h3>
         </div>
       </div>
     </Link>
   );
-}); 
+});

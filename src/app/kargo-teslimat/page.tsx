@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Truck, Clock, MapPin, Package, AlertCircle } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Truck, Clock, MapPin, Package, AlertCircle } from 'lucide-react';
 
 const deliveryInfo = {
   standard: {
@@ -16,12 +16,12 @@ const deliveryInfo = {
     minOrder: 'Tüm siparişlerde',
     icon: <Clock className="h-6 w-6" />,
   },
-}
+};
 
 const carriers = [
   {
     name: 'Yurtiçi Kargo',
-    description: 'Türkiye\'nin her yerine teslimat',
+    description: "Türkiye'nin her yerine teslimat",
     trackingUrl: 'https://www.yurticikargo.com',
   },
   {
@@ -34,7 +34,7 @@ const carriers = [
     description: 'Geniş şube ağı ile teslimat',
     trackingUrl: 'https://www.mngkargo.com.tr',
   },
-]
+];
 
 const deliveryAreas = [
   {
@@ -52,7 +52,7 @@ const deliveryAreas = [
     deliveryTime: '3-5 iş günü',
     description: 'İl merkezlerine teslimat',
   },
-]
+];
 
 export default function ShippingDeliveryPage() {
   return (
@@ -63,20 +63,13 @@ export default function ShippingDeliveryPage() {
         <Card>
           <CardHeader>
             <CardTitle>Teslimat Seçenekleri</CardTitle>
-            <CardDescription>
-              Size en uygun teslimat seçeneğini seçin
-            </CardDescription>
+            <CardDescription>Size en uygun teslimat seçeneğini seçin</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               {Object.entries(deliveryInfo).map(([key, info]) => (
-                <div
-                  key={key}
-                  className="flex items-start gap-4 rounded-lg border p-4"
-                >
-                  <div className="rounded-full bg-primary/10 p-2">
-                    {info.icon}
-                  </div>
+                <div key={key} className="flex items-start gap-4 rounded-lg border p-4">
+                  <div className="rounded-full bg-primary/10 p-2">{info.icon}</div>
                   <div>
                     <h3 className="font-semibold">{info.title}</h3>
                     <p className="text-sm text-gray-600">{info.description}</p>
@@ -95,13 +88,11 @@ export default function ShippingDeliveryPage() {
         <Card>
           <CardHeader>
             <CardTitle>Kargo Firmaları</CardTitle>
-            <CardDescription>
-              Anlaşmalı kargo firmalarımız
-            </CardDescription>
+            <CardDescription>Anlaşmalı kargo firmalarımız</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {carriers.map((carrier) => (
+              {carriers.map(carrier => (
                 <div
                   key={carrier.name}
                   className="flex items-center justify-between rounded-lg border p-4"
@@ -128,25 +119,18 @@ export default function ShippingDeliveryPage() {
       <Card className="mt-8">
         <CardHeader>
           <CardTitle>Teslimat Bölgeleri</CardTitle>
-          <CardDescription>
-            Bölgelere göre teslimat süreleri
-          </CardDescription>
+          <CardDescription>Bölgelere göre teslimat süreleri</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
-            {deliveryAreas.map((area) => (
-              <div
-                key={area.region}
-                className="rounded-lg border p-4"
-              >
+            {deliveryAreas.map(area => (
+              <div key={area.region} className="rounded-lg border p-4">
                 <div className="mb-2 flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-primary" />
                   <h3 className="font-semibold">{area.region}</h3>
                 </div>
                 <p className="text-sm text-gray-600">{area.description}</p>
-                <p className="mt-2 text-sm font-medium text-primary">
-                  {area.deliveryTime}
-                </p>
+                <p className="mt-2 text-sm font-medium text-primary">{area.deliveryTime}</p>
               </div>
             ))}
           </div>
@@ -174,7 +158,8 @@ export default function ShippingDeliveryPage() {
               <div>
                 <h3 className="font-semibold">Teslimat Kontrolü</h3>
                 <p className="text-sm text-gray-600">
-                  Ürünlerinizi teslim alırken kargo firması yetkilisi yanınızdayken kontrol etmenizi öneririz.
+                  Ürünlerinizi teslim alırken kargo firması yetkilisi yanınızdayken kontrol etmenizi
+                  öneririz.
                 </p>
               </div>
             </div>
@@ -192,5 +177,5 @@ export default function ShippingDeliveryPage() {
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+}

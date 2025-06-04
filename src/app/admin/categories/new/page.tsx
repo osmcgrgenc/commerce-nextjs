@@ -1,4 +1,4 @@
-import CategoryForm from "../../../../components/admin/category-form";
+import CategoryForm from '../../../../components/admin/category-form';
 
 export default function NewCategoryPage() {
   return (
@@ -7,4 +7,4 @@ export default function NewCategoryPage() {
       <CategoryForm />
     </div>
   );
-} 
+}

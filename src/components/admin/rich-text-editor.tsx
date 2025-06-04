@@ -1,9 +1,9 @@
-"use client";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import Placeholder from "@tiptap/extension-placeholder";
+'use client';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import Image from '@tiptap/extension-image';
+import Placeholder from '@tiptap/extension-placeholder';
 
 type RichTextEditorProps = {
   content: string;
@@ -14,7 +14,7 @@ type RichTextEditorProps = {
 export default function RichTextEditor({
   content,
   onChange,
-  placeholder = "İçerik yazın...",
+  placeholder = 'İçerik yazın...',
 }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -22,12 +22,12 @@ export default function RichTextEditor({
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-indigo-600 hover:text-indigo-800 underline",
+          class: 'text-indigo-600 hover:text-indigo-800 underline',
         },
       }),
       Image.configure({
         HTMLAttributes: {
-          class: "max-w-full h-auto rounded-lg",
+          class: 'max-w-full h-auto rounded-lg',
         },
       }),
       Placeholder.configure({
@@ -49,9 +49,7 @@ export default function RichTextEditor({
       <div className="border-b border-gray-300 p-2 flex flex-wrap gap-2">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-2 rounded ${
-            editor.isActive("bold") ? "bg-gray-200" : "hover:bg-gray-100"
-          }`}
+          className={`p-2 rounded ${editor.isActive('bold') ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
           title="Kalın"
         >
           <svg
@@ -72,7 +70,7 @@ export default function RichTextEditor({
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`p-2 rounded ${
-            editor.isActive("italic") ? "bg-gray-200" : "hover:bg-gray-100"
+            editor.isActive('italic') ? 'bg-gray-200' : 'hover:bg-gray-100'
           }`}
           title="İtalik"
         >
@@ -95,7 +93,7 @@ export default function RichTextEditor({
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={`p-2 rounded ${
-            editor.isActive("heading", { level: 2 }) ? "bg-gray-200" : "hover:bg-gray-100"
+            editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : 'hover:bg-gray-100'
           }`}
           title="Başlık"
         >
@@ -118,7 +116,7 @@ export default function RichTextEditor({
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`p-2 rounded ${
-            editor.isActive("bulletList") ? "bg-gray-200" : "hover:bg-gray-100"
+            editor.isActive('bulletList') ? 'bg-gray-200' : 'hover:bg-gray-100'
           }`}
           title="Liste"
         >
@@ -143,14 +141,12 @@ export default function RichTextEditor({
         </button>
         <button
           onClick={() => {
-            const url = window.prompt("Link URL:");
+            const url = window.prompt('Link URL:');
             if (url) {
               editor.chain().focus().setLink({ href: url }).run();
             }
           }}
-          className={`p-2 rounded ${
-            editor.isActive("link") ? "bg-gray-200" : "hover:bg-gray-100"
-          }`}
+          className={`p-2 rounded ${editor.isActive('link') ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
           title="Link"
         >
           <svg
@@ -170,7 +166,7 @@ export default function RichTextEditor({
         </button>
         <button
           onClick={() => {
-            const url = window.prompt("Görsel URL:");
+            const url = window.prompt('Görsel URL:');
             if (url) {
               editor.chain().focus().setImage({ src: url }).run();
             }
@@ -201,4 +197,4 @@ export default function RichTextEditor({
       />
     </div>
   );
-} 
+}

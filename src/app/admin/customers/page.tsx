@@ -1,4 +1,4 @@
-import CustomerList from "../../../components/admin/customer-list";
+import CustomerList from '../../../components/admin/customer-list';
 
 export default function CustomersPage() {
   return (
@@ -9,4 +9,4 @@ export default function CustomersPage() {
       </div>
     </div>
   );
-} 
+}

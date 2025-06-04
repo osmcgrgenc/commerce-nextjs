@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { useAuthenticationStatus } from '@nhost/nextjs'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Heart, Trash2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { useAuthenticationStatus } from '@nhost/nextjs';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Heart, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 // Bu veri normalde bir API'den gelecek
 const favorites = [
@@ -30,38 +30,36 @@ const favorites = [
     image: '/images/products/yatak-odasi.jpg',
     href: '/urunler/yatak-odasi-takimi',
   },
-]
+];
 
 export default function FavoritesPage() {
-  const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
 
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">Yükleniyor...</div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
-    router.push('/auth/login')
-    return null
+    router.push('/auth/login');
+    return null;
   }
 
   const handleRemoveFavorite = (id: number) => {
     // Burada normalde bir API çağrısı yapılır
-    toast.success('Ürün favorilerden kaldırıldı')
-  }
+    toast.success('Ürün favorilerden kaldırıldı');
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-2xl font-bold leading-6 text-gray-900">
-              Favorilerim
-            </h3>
+            <h3 className="text-2xl font-bold leading-6 text-gray-900">Favorilerim</h3>
 
             {favorites.length === 0 ? (
               <div className="mt-8 text-center">
@@ -82,7 +80,7 @@ export default function FavoritesPage() {
             ) : (
               <div className="mt-8 flow-root">
                 <ul className="-my-6 divide-y divide-gray-200">
-                  {favorites.map((product) => (
+                  {favorites.map(product => (
                     <li key={product.id} className="flex py-6">
                       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                         <Image
@@ -129,5 +127,5 @@ export default function FavoritesPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

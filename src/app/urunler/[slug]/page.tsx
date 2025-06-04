@@ -1,279 +1,346 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { useParams } from 'next/navigation'
-import { Heart, Share2, Truck, Shield, RefreshCw } from 'lucide-react'
-import { toast } from 'sonner'
-import { ProductReviews } from '@/components/product-reviews'
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import { Heart, Share2, Truck, Shield, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
+import { ProductReviews } from '@/components/product-reviews';
+import nhost from '@/lib/nhost/client';
+import { generateMetadata } from '@/lib/metadata';
+import { getProduct } from '@/lib/api';
 
-// Bu veri normalde bir API'den gelecek
-const product = {
-  id: 1,
-  name: 'Modern Köşe Koltuk',
-  price: 24999,
-  description:
-    'Modern tasarımı ve yüksek konforu bir arada sunan köşe koltuk. Premium kumaş ve kaliteli malzemelerden üretilmiştir. Evinizin her köşesine şıklık katacak bu koltuk, uzun yıllar kullanım için tasarlanmıştır.',
-  images: [
-    '/images/products/kose-koltuk-1.jpg',
-    '/images/products/kose-koltuk-2.jpg',
-    '/images/products/kose-koltuk-3.jpg',
-    '/images/products/kose-koltuk-4.jpg',
-  ],
-  features: [
-    'Premium kumaş',
-    'Yüksek konfor',
-    'Kolay temizlenebilir',
-    'Montaj dahil',
-    '2 yıl garanti',
-  ],
-  dimensions: {
-    width: '280 cm',
-    depth: '180 cm',
-    height: '85 cm',
-  },
-  colors: [
-    { name: 'Bej', value: '#F5F5DC' },
-    { name: 'Gri', value: '#808080' },
-    { name: 'Lacivert', value: '#000080' },
-  ],
-  stock: 5,
-  reviews: {
-    averageRating: 4.5,
-    totalReviews: 128,
-    items: [
-      {
-        id: 1,
-        user: {
-          name: 'Ahmet Yılmaz',
-          avatar: '/images/avatars/user-1.jpg',
-        },
-        rating: 5,
-        date: '15 Şubat 2024',
-        title: 'Harika bir ürün',
-        comment: 'Çok rahat ve kaliteli bir koltuk. Beklentilerimin üzerinde bir ürün.',
-        likes: 12,
-        dislikes: 0,
-        verified: true,
-      },
-      {
-        id: 2,
-        user: {
-          name: 'Ayşe Demir',
-          avatar: '/images/avatars/user-2.jpg',
-        },
-        rating: 4,
-        date: '10 Şubat 2024',
-        title: 'Güzel ama biraz pahalı',
-        comment: 'Kalitesi çok iyi ama fiyatı biraz yüksek. Yine de memnunum.',
-        likes: 8,
-        dislikes: 2,
-        verified: true,
-      },
-    ],
-  },
+interface ProductImage {
+  image_url: string;
+  is_primary: boolean;
+}
+
+interface ProductVariant {
+  id: string;
+  name: string;
+  price_adjustment: number;
+  stock_quantity: number;
+}
+
+interface ProductReview {
+  id: string;
+  user: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+  stock: number;
+  reviews: ProductReview[];
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const product = await getProduct(params.slug);
+
+  if (!product) {
+    return generateMetadata({
+      title: 'Ürün Bulunamadı',
+      description: 'Aradığınız ürün bulunamadı.',
+    });
+  }
+
+  return generateMetadata({
+    title: product.name,
+    description: product.description,
+    image: product.image,
+    url: `https://www.limandesign.com/urunler/${params.slug}`,
+  });
 }
 
 export default function ProductPage() {
-  const params = useParams()
-  const [selectedImage, setSelectedImage] = useState(product.images[0])
-  const [selectedColor, setSelectedColor] = useState(product.colors[0])
-  const [quantity, setQuantity] = useState(1)
+  const params = useParams();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAddToCart = () => {
-    // Sepete ekleme işlemi burada yapılacak
-    toast.success('Ürün sepete eklendi')
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await nhost.graphql.request<{ products: Product[] }>(
+          `
+          query GetProduct($slug: String!) {
+            products(where: {slug: {_eq: $slug}}) {
+              id
+              name
+              price
+              description
+              images {
+                image_url
+                is_primary
+              }
+              features
+              dimensions
+              colors
+              stock_quantity
+              reviews {
+                average_rating
+                total_reviews
+                items {
+                  id
+                  user {
+                    name
+                    avatar_url
+                  }
+                  rating
+                  created_at
+                  title
+                  comment
+                  likes
+                  dislikes
+                  is_verified
+                }
+              }
+              variants {
+                id
+                name
+                price_adjustment
+                stock_quantity
+              }
+            }
+          }
+        `,
+          { slug: params.slug }
+        );
+
+        if (error) throw error;
+        if (!data.products[0]) throw new Error('Ürün bulunamadı');
+
+        setProduct(data.products[0]);
+      } catch (err) {
+        setError('Ürün yüklenirken bir hata oluştu');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [params.slug]);
+
+  if (isLoading) {
+    return (
+      <div className="animate-pulse">
+        <div className="aspect-square rounded-lg bg-gray-200" />
+        <div className="mt-4 space-y-2">
+          <div className="h-4 w-3/4 rounded bg-gray-200" />
+          <div className="h-4 w-1/2 rounded bg-gray-200" />
+        </div>
+      </div>
+    );
   }
 
-  const handleAddToFavorites = () => {
-    // Favorilere ekleme işlemi burada yapılacak
-    toast.success('Ürün favorilere eklendi')
-  }
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: product.description,
-        url: window.location.href,
-      })
-    } else {
-      toast.info('Paylaşım özelliği bu tarayıcıda desteklenmiyor')
-    }
+  if (error || !product) {
+    return <div className="text-red-500">{error || 'Ürün bulunamadı'}</div>;
   }
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
-          {/* Ürün Görselleri */}
-          <div className="lg:max-w-lg lg:self-end">
-            <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
+        {/* Ürün Görselleri */}
+        <div className="lg:max-w-lg lg:self-end">
+          <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
+            <div className="relative h-96 w-full">
               <Image
-                src={selectedImage}
+                src={
+                  product.images.find(img => img.is_primary)?.image_url ||
+                  product.images[0]?.image_url ||
+                  '/images/placeholder.jpg'
+                }
                 alt={product.name}
-                width={800}
-                height={800}
-                className="h-full w-full object-cover object-center"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover object-center"
+                priority
+                quality={90}
               />
             </div>
-            <div className="mt-4 grid grid-cols-4 gap-4">
-              {product.images.map((image) => (
-                <button
-                  key={image}
-                  onClick={() => setSelectedImage(image)}
-                  className={`aspect-h-1 aspect-w-1 overflow-hidden rounded-lg ${
-                    selectedImage === image ? 'ring-2 ring-indigo-500' : ''
-                  }`}
-                >
-                  <Image
-                    src={image}
-                    alt={product.name}
-                    width={200}
-                    height={200}
-                    className="h-full w-full object-cover object-center"
-                  />
-                </button>
-              ))}
+          </div>
+          <div className="mt-4 grid grid-cols-4 gap-4">
+            {product.images.map(image => (
+              <button
+                key={image.image_url}
+                onClick={() => {
+                  // Implement the logic to change the selected image
+                }}
+                className={`relative h-24 w-24 overflow-hidden rounded-lg ${
+                  image.is_primary ? 'ring-2 ring-indigo-500' : ''
+                }`}
+              >
+                <Image
+                  src={image.image_url}
+                  alt={`${product.name} - ${image.is_primary ? 'Primary' : 'Secondary'}`}
+                  fill
+                  sizes="96px"
+                  className="object-cover object-center"
+                  loading="lazy"
+                  quality={75}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Ürün Bilgileri */}
+        <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
+          <div className="mt-3">
+            <h2 className="sr-only">Ürün bilgileri</h2>
+            <p className="text-3xl tracking-tight text-gray-900">{product.price} TL</p>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="sr-only">Açıklama</h3>
+            <div className="space-y-6 text-base text-gray-700">{product.description}</div>
+          </div>
+
+          <div className="mt-6">
+            <div className="flex items-center">
+              <div className="flex items-center">
+                {[0, 1, 2, 3, 4].map(rating => (
+                  <svg
+                    key={rating}
+                    className={`h-5 w-5 flex-shrink-0 ${
+                      rating < product.reviews.average_rating ? 'text-yellow-400' : 'text-gray-200'
+                    }`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                ))}
+              </div>
+              <p className="ml-3 text-sm text-gray-700">
+                {product.reviews.total_reviews} değerlendirme
+              </p>
             </div>
           </div>
 
-          {/* Ürün Bilgileri */}
-          <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
-            <div className="mt-3">
-              <h2 className="sr-only">Ürün bilgileri</h2>
-              <p className="text-3xl tracking-tight text-gray-900">
-                {new Intl.NumberFormat('tr-TR', {
-                  style: 'currency',
-                  currency: 'TRY',
-                }).format(product.price)}
-              </p>
+          <div className="mt-6">
+            <div className="flex items-center">
+              <div className="flex items-center">
+                <Truck className="h-5 w-5 text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">Ücretsiz Kargo</span>
+              </div>
+              <div className="ml-4 flex items-center">
+                <Shield className="h-5 w-5 text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">2 Yıl Garanti</span>
+              </div>
+              <div className="ml-4 flex items-center">
+                <RefreshCw className="h-5 w-5 text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">14 Gün İade</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium text-gray-900">Renk</h3>
             </div>
 
-            {/* Renk Seçimi */}
-            <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-900">Renk</h3>
-              <div className="mt-2 flex items-center space-x-3">
-                {product.colors.map((color) => (
+            <div className="mt-4">
+              <div className="flex items-center space-x-3">
+                {product.colors.map(color => (
                   <button
-                    key={color.name}
-                    onClick={() => setSelectedColor(color)}
-                    className={`relative h-8 w-8 rounded-full border ${
-                      selectedColor.name === color.name ? 'ring-2 ring-indigo-500' : ''
-                    }`}
-                    style={{ backgroundColor: color.value }}
+                    key={color}
+                    className="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
                   >
-                    <span className="sr-only">{color.name}</span>
+                    <span className="sr-only">{color}</span>
+                    <span
+                      className="h-8 w-8 rounded-full border border-black border-opacity-10"
+                      style={{ backgroundColor: color }}
+                    />
                   </button>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Adet Seçimi */}
-            <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-900">Adet</h3>
-              <div className="mt-2 flex items-center space-x-3">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="rounded-md border p-2 hover:bg-gray-50"
-                >
-                  -
-                </button>
-                <span className="text-lg font-medium">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                  className="rounded-md border p-2 hover:bg-gray-50"
-                >
-                  +
-                </button>
-              </div>
-            </div>
+          <div className="mt-10">
+            <button
+              type="button"
+              className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Sepete Ekle
+            </button>
+            <button
+              type="button"
+              className="mt-4 flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-8 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <Heart className="h-5 w-5 text-gray-400" />
+              <span className="ml-2">Favorilere Ekle</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
-            {/* Açıklama */}
-            <div className="mt-6">
-              <h3 className="sr-only">Açıklama</h3>
-              <div className="space-y-6 text-base text-gray-700">{product.description}</div>
-            </div>
-
-            {/* Özellikler */}
-            <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-900">Özellikler</h3>
-              <div className="mt-2">
-                <ul className="list-disc space-y-2 pl-4 text-sm text-gray-600">
-                  {product.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Boyutlar */}
-            <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-900">Boyutlar</h3>
-              <div className="mt-2 text-sm text-gray-600">
-                <p>Genişlik: {product.dimensions.width}</p>
-                <p>Derinlik: {product.dimensions.depth}</p>
-                <p>Yükseklik: {product.dimensions.height}</p>
-              </div>
-            </div>
-
-            {/* Aksiyon Butonları */}
-            <div className="mt-10 flex flex-col space-y-4">
-              <button
-                onClick={handleAddToCart}
-                className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Sepete Ekle
-              </button>
-              <div className="flex space-x-4">
-                <button
-                  onClick={handleAddToFavorites}
-                  className="flex flex-1 items-center justify-center rounded-md border border-gray-300 bg-white px-8 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <Heart className="h-5 w-5" />
-                  <span className="ml-2">Favorilere Ekle</span>
-                </button>
-                <button
-                  onClick={handleShare}
-                  className="flex flex-1 items-center justify-center rounded-md border border-gray-300 bg-white px-8 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <Share2 className="h-5 w-5" />
-                  <span className="ml-2">Paylaş</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Teslimat ve Garanti Bilgileri */}
-            <div className="mt-10 border-t border-gray-200 pt-10">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="flex items-center">
-                  <Truck className="h-6 w-6 text-gray-400" />
-                  <span className="ml-2 text-sm text-gray-500">Ücretsiz Teslimat</span>
+      {/* Ürün Detayları */}
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+        <div className="border-t border-gray-200 pt-10">
+          <h3 className="text-2xl font-bold tracking-tight text-gray-900">Ürün Özellikleri</h3>
+          <div className="mt-4 space-y-6">
+            {product.features.map((feature, index) => (
+              <div key={index} className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-6 w-6 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
                 </div>
-                <div className="flex items-center">
-                  <Shield className="h-6 w-6 text-gray-400" />
-                  <span className="ml-2 text-sm text-gray-500">2 Yıl Garanti</span>
-                </div>
-                <div className="flex items-center">
-                  <RefreshCw className="h-6 w-6 text-gray-400" />
-                  <span className="ml-2 text-sm text-gray-500">14 Gün İade</span>
-                </div>
+                <p className="ml-3 text-base text-gray-700">{feature}</p>
               </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 pt-10">
+          <h3 className="text-2xl font-bold tracking-tight text-gray-900">Boyutlar</h3>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Genişlik</p>
+              <p className="mt-1 text-base text-gray-900">{product.dimensions.width}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">Derinlik</p>
+              <p className="mt-1 text-base text-gray-900">{product.dimensions.depth}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">Yükseklik</p>
+              <p className="mt-1 text-base text-gray-900">{product.dimensions.height}</p>
             </div>
           </div>
         </div>
 
-        {/* Yorumlar Bölümü */}
-        <div className="mt-16">
-          <ProductReviews
-            productId={product.id}
-            averageRating={product.reviews.averageRating}
-            totalReviews={product.reviews.totalReviews}
-            reviews={product.reviews.items}
-          />
+        {/* Ürün Yorumları */}
+        <div className="border-t border-gray-200 pt-10">
+          <ProductReviews reviews={product.reviews} />
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -1,4 +1,4 @@
-import TagForm from "@/components/admin/tag-form";
+import TagForm from '@/components/admin/tag-form';
 
 type Props = {
   params: {
@@ -13,4 +13,4 @@ export default function EditTagPage({ params }: Props) {
       <TagForm tagId={params.id} />
     </div>
   );
-} 
+}

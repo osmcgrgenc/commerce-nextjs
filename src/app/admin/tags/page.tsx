@@ -1,4 +1,4 @@
-import TagList from "../../../components/admin/tag-list";
+import TagList from '../../../components/admin/tag-list';
 
 export default function TagsPage() {
   return (
@@ -7,4 +7,4 @@ export default function TagsPage() {
       <TagList />
     </div>
   );
-} 
+}

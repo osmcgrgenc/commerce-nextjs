@@ -1,4 +1,4 @@
-import SettingsForm from "../../../components/admin/settings-form";
+import SettingsForm from '../../../components/admin/settings-form';
 
 export default function SettingsPage() {
   return (
@@ -9,4 +9,4 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-} 
+}

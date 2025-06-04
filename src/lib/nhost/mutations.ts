@@ -1,7 +1,20 @@
 import nhost from './client';
-import { GraphQLResponse, Page, Post, Comment, Category, Tag, Product, Order, Customer, Settings } from './types';
+import {
+  GraphQLResponse,
+  Page,
+  Post,
+  Comment,
+  Category,
+  Tag,
+  Product,
+  Order,
+  Customer,
+  Settings,
+} from './types';
 
-export async function createPage(page: Omit<Page, 'id' | 'created_at' | 'updated_at'>): Promise<Page> {
+export async function createPage(
+  page: Omit<Page, 'id' | 'created_at' | 'updated_at'>
+): Promise<Page> {
   const { data, error } = await nhost.graphql.request<GraphQLResponse<{ insert_pages_one: Page }>>(
     `
     mutation CreatePage($page: pages_insert_input!) {
@@ -27,7 +40,9 @@ export async function createPage(page: Omit<Page, 'id' | 'created_at' | 'updated
 }
 
 export async function updatePage(id: string, page: Partial<Page>): Promise<Page> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_pages_by_pk: Page }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_pages_by_pk: Page }>
+  >(
     `
     mutation UpdatePage($id: uuid!, $page: pages_set_input!) {
       update_pages_by_pk(pk_columns: {id: $id}, _set: $page) {
@@ -52,7 +67,9 @@ export async function updatePage(id: string, page: Partial<Page>): Promise<Page>
 }
 
 export async function deletePage(id: string): Promise<string> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ delete_pages_by_pk: { id: string } }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_pages_by_pk: { id: string } }>
+  >(
     `
     mutation DeletePage($id: uuid!) {
       delete_pages_by_pk(id: $id) {
@@ -68,7 +85,9 @@ export async function deletePage(id: string): Promise<string> {
   return data.data.delete_pages_by_pk.id;
 }
 
-export async function createPost(post: Omit<Post, 'id' | 'created_at' | 'updated_at'>): Promise<Post> {
+export async function createPost(
+  post: Omit<Post, 'id' | 'created_at' | 'updated_at'>
+): Promise<Post> {
   const { data, error } = await nhost.graphql.request<GraphQLResponse<{ insert_posts_one: Post }>>(
     `
     mutation CreatePost($post: posts_insert_input!) {
@@ -98,7 +117,9 @@ export async function createPost(post: Omit<Post, 'id' | 'created_at' | 'updated
 }
 
 export async function updatePost(id: string, post: Partial<Post>): Promise<Post> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_posts_by_pk: Post }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_posts_by_pk: Post }>
+  >(
     `
     mutation UpdatePost($id: uuid!, $post: posts_set_input!) {
       update_posts_by_pk(pk_columns: {id: $id}, _set: $post) {
@@ -127,7 +148,9 @@ export async function updatePost(id: string, post: Partial<Post>): Promise<Post>
 }
 
 export async function deletePost(id: string): Promise<string> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ delete_posts_by_pk: { id: string } }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_posts_by_pk: { id: string } }>
+  >(
     `
     mutation DeletePost($id: uuid!) {
       delete_posts_by_pk(id: $id) {
@@ -143,8 +166,12 @@ export async function deletePost(id: string): Promise<string> {
   return data.data.delete_posts_by_pk.id;
 }
 
-export async function createComment(comment: Omit<Comment, 'id' | 'created_at' | 'updated_at'>): Promise<Comment> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ insert_comments_one: Comment }>>(
+export async function createComment(
+  comment: Omit<Comment, 'id' | 'created_at' | 'updated_at'>
+): Promise<Comment> {
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ insert_comments_one: Comment }>
+  >(
     `
     mutation CreateComment($comment: comments_insert_input!) {
       insert_comments_one(object: $comment) {
@@ -167,8 +194,13 @@ export async function createComment(comment: Omit<Comment, 'id' | 'created_at' |
   return data.data.insert_comments_one;
 }
 
-export async function updateCommentStatus(id: string, status: 'pending' | 'approved' | 'rejected'): Promise<Comment> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_comments_by_pk: Comment }>>(
+export async function updateCommentStatus(
+  id: string,
+  status: 'pending' | 'approved' | 'rejected'
+): Promise<Comment> {
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_comments_by_pk: Comment }>
+  >(
     `
     mutation UpdateCommentStatus($id: uuid!, $status: String!) {
       update_comments_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
@@ -192,7 +224,9 @@ export async function updateCommentStatus(id: string, status: 'pending' | 'appro
 }
 
 export async function deleteComment(id: string): Promise<string> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ delete_comments_by_pk: { id: string } }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_comments_by_pk: { id: string } }>
+  >(
     `
     mutation DeleteComment($id: uuid!) {
       delete_comments_by_pk(id: $id) {
@@ -209,7 +243,9 @@ export async function deleteComment(id: string): Promise<string> {
 }
 
 export async function createCategory(category: Omit<Category, 'id'>): Promise<Category> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ insert_categories_one: Category }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ insert_categories_one: Category }>
+  >(
     `
     mutation CreateCategory($category: categories_insert_input!) {
       insert_categories_one(object: $category) {
@@ -228,7 +264,9 @@ export async function createCategory(category: Omit<Category, 'id'>): Promise<Ca
 }
 
 export async function updateCategory(id: string, category: Partial<Category>): Promise<Category> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_categories_by_pk: Category }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_categories_by_pk: Category }>
+  >(
     `
     mutation UpdateCategory($id: uuid!, $category: categories_set_input!) {
       update_categories_by_pk(pk_columns: {id: $id}, _set: $category) {
@@ -247,7 +285,9 @@ export async function updateCategory(id: string, category: Partial<Category>): P
 }
 
 export async function deleteCategory(id: string): Promise<string> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ delete_categories_by_pk: { id: string } }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_categories_by_pk: { id: string } }>
+  >(
     `
     mutation DeleteCategory($id: uuid!) {
       delete_categories_by_pk(id: $id) {
@@ -302,7 +342,9 @@ export async function updateTag(id: string, tag: Partial<Tag>): Promise<Tag> {
 }
 
 export async function deleteTag(id: string): Promise<string> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ delete_tags_by_pk: { id: string } }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_tags_by_pk: { id: string } }>
+  >(
     `
     mutation DeleteTag($id: uuid!) {
       delete_tags_by_pk(id: $id) {
@@ -318,8 +360,12 @@ export async function deleteTag(id: string): Promise<string> {
   return data.data.delete_tags_by_pk.id;
 }
 
-export async function createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ insert_products_one: Product }>>(
+export async function createProduct(
+  product: Omit<Product, 'id' | 'created_at' | 'updated_at'>
+): Promise<Product> {
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ insert_products_one: Product }>
+  >(
     `
     mutation CreateProduct($product: products_insert_input!) {
       insert_products_one(object: $product) {
@@ -347,7 +393,9 @@ export async function createProduct(product: Omit<Product, 'id' | 'created_at' |
 }
 
 export async function updateProduct(id: string, product: Partial<Product>): Promise<Product> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_products_by_pk: Product }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_products_by_pk: Product }>
+  >(
     `
     mutation UpdateProduct($id: uuid!, $product: products_set_input!) {
       update_products_by_pk(pk_columns: {id: $id}, _set: $product) {
@@ -375,7 +423,9 @@ export async function updateProduct(id: string, product: Partial<Product>): Prom
 }
 
 export async function deleteProduct(id: string): Promise<string> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ delete_products_by_pk: { id: string } }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_products_by_pk: { id: string } }>
+  >(
     `
     mutation DeleteProduct($id: uuid!) {
       delete_products_by_pk(id: $id) {
@@ -392,7 +442,9 @@ export async function deleteProduct(id: string): Promise<string> {
 }
 
 export async function updateOrderStatus(id: string, status: string): Promise<Order> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_orders_by_pk: Order }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_orders_by_pk: Order }>
+  >(
     `
     mutation UpdateOrderStatus($id: uuid!, $status: String!) {
       update_orders_by_pk(pk_columns: {id: $id}, _set: {status: $status}) {
@@ -446,7 +498,9 @@ export async function updateOrderStatus(id: string, status: string): Promise<Ord
 }
 
 export async function updateCustomer(id: string, customer: Partial<Customer>): Promise<Customer> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_customers_by_pk: Customer }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_customers_by_pk: Customer }>
+  >(
     `
     mutation UpdateCustomer($id: uuid!, $customer: customers_set_input!) {
       update_customers_by_pk(pk_columns: {id: $id}, _set: $customer) {
@@ -478,7 +532,9 @@ export async function updateCustomer(id: string, customer: Partial<Customer>): P
 }
 
 export async function updateSettings(settings: Partial<Settings>): Promise<Settings> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ update_settings_by_pk: Settings }>>(
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ update_settings_by_pk: Settings }>
+  >(
     `
     mutation UpdateSettings($settings: settings_set_input!) {
       update_settings_by_pk(pk_columns: {id: "1"}, _set: $settings) {
@@ -510,4 +566,4 @@ export async function updateSettings(settings: Partial<Settings>): Promise<Setti
   if (error) throw error;
   if (!data.data.update_settings_by_pk) throw new Error('Site ayarları güncellenemedi');
   return data.data.update_settings_by_pk;
-} 
+}

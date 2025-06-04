@@ -12,36 +12,43 @@ export default function ReturnPolicyPage() {
             <section>
               <h2 className="text-xl font-semibold text-gray-900">1. İade Koşulları</h2>
               <p className="mt-4">
-                Ürünlerimizi teslim aldığınız tarihten itibaren 14 gün içinde herhangi bir sebep göstermeksizin iade edebilirsiniz. İade edilecek ürünün kullanılmamış, orijinal ambalajında ve faturası ile birlikte olması gerekmektedir.
+                Ürünlerimizi teslim aldığınız tarihten itibaren 14 gün içinde herhangi bir sebep
+                göstermeksizin iade edebilirsiniz. İade edilecek ürünün kullanılmamış, orijinal
+                ambalajında ve faturası ile birlikte olması gerekmektedir.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">2. İade Süreci</h2>
               <p className="mt-4">
-                İade işlemi için öncelikle müşteri hizmetlerimizle iletişime geçmeniz gerekmektedir. İade talebiniz onaylandıktan sonra, ürünü kargo firmamız aracılığıyla bize gönderebilirsiniz. Kargo ücreti iade edilecek ürünün değerine göre değişiklik gösterebilir.
+                İade işlemi için öncelikle müşteri hizmetlerimizle iletişime geçmeniz gerekmektedir.
+                İade talebiniz onaylandıktan sonra, ürünü kargo firmamız aracılığıyla bize
+                gönderebilirsiniz. Kargo ücreti iade edilecek ürünün değerine göre değişiklik
+                gösterebilir.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">3. Değişim</h2>
               <p className="mt-4">
-                Ürün değişimi için de aynı iade koşulları geçerlidir. Değişim yapmak istediğiniz ürünün stokta olması durumunda, fiyat farkı olup olmadığına bakılmaksızın değişim işlemi gerçekleştirilir.
+                Ürün değişimi için de aynı iade koşulları geçerlidir. Değişim yapmak istediğiniz
+                ürünün stokta olması durumunda, fiyat farkı olup olmadığına bakılmaksızın değişim
+                işlemi gerçekleştirilir.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">4. Ödeme İadesi</h2>
               <p className="mt-4">
-                İade edilen ürünün bedeli, ödeme yapılan karta veya banka hesabına, iade işleminin tamamlanmasından sonraki 14 iş günü içinde iade edilir. Kredi kartı iadeleri, bankanızın işlem süresine bağlı olarak değişiklik gösterebilir.
+                İade edilen ürünün bedeli, ödeme yapılan karta veya banka hesabına, iade işleminin
+                tamamlanmasından sonraki 14 iş günü içinde iade edilir. Kredi kartı iadeleri,
+                bankanızın işlem süresine bağlı olarak değişiklik gösterebilir.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">5. İade Edilemeyecek Ürünler</h2>
-              <p className="mt-4">
-                Aşağıdaki durumlarda ürün iadesi kabul edilmemektedir:
-              </p>
+              <p className="mt-4">Aşağıdaki durumlarda ürün iadesi kabul edilmemektedir:</p>
               <ul className="mt-4 list-disc pl-5 space-y-2">
                 <li>Ürünün kullanılmış olması</li>
                 <li>Orijinal ambalajının bozulmuş olması</li>
@@ -65,5 +72,5 @@ export default function ReturnPolicyPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

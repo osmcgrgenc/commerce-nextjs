@@ -1,8 +1,8 @@
-"use client";
-import { useState } from "react";
-import { getComments } from "@/lib/nhost/queries";
-import { updateCommentStatus, deleteComment } from "@/lib/nhost/mutations";
-import { Comment } from "@/lib/nhost/types";
+'use client';
+import { useState } from 'react';
+import { getComments } from '@/lib/nhost/queries';
+import { updateCommentStatus, deleteComment } from '@/lib/nhost/mutations';
+import { Comment } from '@/lib/nhost/types';
 
 type CommentListProps = {
   postId: string;
@@ -39,7 +39,7 @@ export default function CommentList({ postId }: CommentListProps) {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Bu yorumu silmek istediğinizden emin misiniz?')) return;
-    
+
     setIsDeleting(id);
     try {
       await deleteComment(id);
@@ -57,19 +57,25 @@ export default function CommentList({ postId }: CommentListProps) {
 
   return (
     <div className="space-y-4">
-      {comments.map((comment) => (
+      {comments.map(comment => (
         <div key={comment.id} className="bg-white p-4 rounded-lg shadow">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm text-gray-500">
-                {comment.user?.display_name || 'Anonim'} - {new Date(comment.created_at).toLocaleDateString('tr-TR')}
+                {comment.user?.display_name || 'Anonim'} -{' '}
+                {new Date(comment.created_at).toLocaleDateString('tr-TR')}
               </p>
               <p className="mt-2">{comment.content}</p>
             </div>
             <div className="flex space-x-2">
               <select
                 value={comment.status}
-                onChange={(e) => handleStatusChange(comment.id, e.target.value as 'pending' | 'approved' | 'rejected')}
+                onChange={e =>
+                  handleStatusChange(
+                    comment.id,
+                    e.target.value as 'pending' | 'approved' | 'rejected'
+                  )
+                }
                 disabled={isUpdating === comment.id}
                 className="text-sm rounded-md border-gray-300"
               >
@@ -90,4 +96,4 @@ export default function CommentList({ postId }: CommentListProps) {
       ))}
     </div>
   );
-} 
+}

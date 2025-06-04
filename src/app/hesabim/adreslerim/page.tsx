@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useAuthenticationStatus } from '@nhost/nextjs'
-import { useRouter } from 'next/navigation'
-import { MapPin, Plus, Pencil, Trash2 } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useAuthenticationStatus } from '@nhost/nextjs';
+import { useRouter } from 'next/navigation';
+import { MapPin, Plus, Pencil, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 // Bu veri normalde bir API'den gelecek
 const addresses = [
@@ -26,40 +26,40 @@ const addresses = [
     city: 'İstanbul',
     postalCode: '34330',
   },
-]
+];
 
 export default function AddressesPage() {
-  const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
-  const [isAddingAddress, setIsAddingAddress] = useState(false)
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
 
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">Yükleniyor...</div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
-    router.push('/auth/login')
-    return null
+    router.push('/auth/login');
+    return null;
   }
 
   const handleAddAddress = () => {
-    setIsAddingAddress(true)
+    setIsAddingAddress(true);
     // Burada normalde bir modal açılır
-  }
+  };
 
   const handleEditAddress = (id: number) => {
     // Burada normalde bir modal açılır
-    toast.success('Adres düzenleme özelliği yakında eklenecek')
-  }
+    toast.success('Adres düzenleme özelliği yakında eklenecek');
+  };
 
   const handleDeleteAddress = (id: number) => {
     // Burada normalde bir API çağrısı yapılır
-    toast.success('Adres silindi')
-  }
+    toast.success('Adres silindi');
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -67,9 +67,7 @@ export default function AddressesPage() {
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="px-4 py-5 sm:p-6">
             <div className="sm:flex sm:items-center sm:justify-between">
-              <h3 className="text-2xl font-bold leading-6 text-gray-900">
-                Adreslerim
-              </h3>
+              <h3 className="text-2xl font-bold leading-6 text-gray-900">Adreslerim</h3>
               <div className="mt-4 sm:mt-0">
                 <button
                   type="button"
@@ -92,7 +90,7 @@ export default function AddressesPage() {
               </div>
             ) : (
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {addresses.map((address) => (
+                {addresses.map(address => (
                   <div
                     key={address.id}
                     className="relative rounded-lg border border-gray-300 bg-white p-6 shadow-sm"
@@ -132,5 +130,5 @@ export default function AddressesPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

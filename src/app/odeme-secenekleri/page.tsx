@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CreditCard, Lock, Shield, AlertCircle, Banknote, Wallet } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CreditCard, Lock, Shield, AlertCircle, Banknote, Wallet } from 'lucide-react';
 
 const paymentMethods = [
   {
@@ -35,7 +35,7 @@ const paymentMethods = [
       'Sadece standart teslimat',
     ],
   },
-]
+];
 
 const securityInfo = [
   {
@@ -53,7 +53,7 @@ const securityInfo = [
     description: 'Kişisel verileriniz KVKK kapsamında korunmaktadır.',
     icon: <AlertCircle className="h-5 w-5" />,
   },
-]
+];
 
 export default function PaymentOptionsPage() {
   return (
@@ -61,13 +61,11 @@ export default function PaymentOptionsPage() {
       <h1 className="mb-8 text-3xl font-bold">Ödeme Seçenekleri</h1>
 
       <div className="grid gap-8 md:grid-cols-3">
-        {paymentMethods.map((method) => (
+        {paymentMethods.map(method => (
           <Card key={method.title}>
             <CardHeader>
               <div className="mb-4 flex items-center gap-3">
-                <div className="rounded-full bg-primary/10 p-2">
-                  {method.icon}
-                </div>
+                <div className="rounded-full bg-primary/10 p-2">{method.icon}</div>
                 <div>
                   <CardTitle>{method.title}</CardTitle>
                   <CardDescription>{method.description}</CardDescription>
@@ -97,19 +95,12 @@ export default function PaymentOptionsPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 md:grid-cols-3">
-            {securityInfo.map((info) => (
-              <div
-                key={info.title}
-                className="flex items-start gap-3 rounded-lg border p-4"
-              >
-                <div className="rounded-full bg-primary/10 p-2">
-                  {info.icon}
-                </div>
+            {securityInfo.map(info => (
+              <div key={info.title} className="flex items-start gap-3 rounded-lg border p-4">
+                <div className="rounded-full bg-primary/10 p-2">{info.icon}</div>
                 <div>
                   <h3 className="font-semibold">{info.title}</h3>
-                  <p className="mt-1 text-sm text-gray-600">
-                    {info.description}
-                  </p>
+                  <p className="mt-1 text-sm text-gray-600">{info.description}</p>
                 </div>
               </div>
             ))}
@@ -123,24 +114,14 @@ export default function PaymentOptionsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4 text-sm text-gray-600">
-            <p>
-              • Tüm kredi kartı bilgileriniz 256-bit SSL sertifikası ile şifrelenerek işlenir.
-            </p>
-            <p>
-              • Kredi kartı bilgileriniz sistemimizde saklanmaz.
-            </p>
-            <p>
-              • Havale/EFT sonrası ödemeniz 1-2 saat içinde onaylanır.
-            </p>
-            <p>
-              • Kapıda ödeme seçeneği sadece standart teslimat için geçerlidir.
-            </p>
-            <p>
-              • Taksit seçenekleri bankanıza göre değişiklik gösterebilir.
-            </p>
+            <p>• Tüm kredi kartı bilgileriniz 256-bit SSL sertifikası ile şifrelenerek işlenir.</p>
+            <p>• Kredi kartı bilgileriniz sistemimizde saklanmaz.</p>
+            <p>• Havale/EFT sonrası ödemeniz 1-2 saat içinde onaylanır.</p>
+            <p>• Kapıda ödeme seçeneği sadece standart teslimat için geçerlidir.</p>
+            <p>• Taksit seçenekleri bankanıza göre değişiklik gösterebilir.</p>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+}

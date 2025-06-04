@@ -8,7 +8,9 @@ declare module '@nhost/react' {
   };
 
   export function useSignInWithOAuth(): {
-    signInWithOAuth: (options: { provider: 'google' | 'github' }) => Promise<{ error: Error | null }>;
+    signInWithOAuth: (options: {
+      provider: 'google' | 'github';
+    }) => Promise<{ error: Error | null }>;
     isLoading: boolean;
   };
 
@@ -20,7 +22,10 @@ declare module '@nhost/react' {
   export function useUserData(): User | null;
 
   export function useUpdateUserData(): {
-    updateUserData: (data: { displayName?: string; avatarUrl?: string }) => Promise<{ error: Error | null }>;
+    updateUserData: (data: {
+      displayName?: string;
+      avatarUrl?: string;
+    }) => Promise<{ error: Error | null }>;
     isLoading: boolean;
   };
-} 
+}

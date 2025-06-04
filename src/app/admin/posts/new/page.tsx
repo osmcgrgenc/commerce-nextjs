@@ -1,4 +1,4 @@
-import PostForm from "../../../../components/admin/post-form";
+import PostForm from '../../../../components/admin/post-form';
 
 export default function NewPostPage() {
   return (
@@ -7,4 +7,4 @@ export default function NewPostPage() {
       <PostForm />
     </div>
   );
-} 
+}

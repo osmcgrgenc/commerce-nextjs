@@ -1,17 +1,24 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Loader2 } from 'lucide-react'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Loader2 } from 'lucide-react';
 
 const returnSchema = z.object({
   orderNumber: z.string().min(1, 'Sipariş numarası gereklidir'),
@@ -21,14 +28,14 @@ const returnSchema = z.object({
   reason: z.string().min(10, 'En az 10 karakter giriniz'),
   details: z.string().min(20, 'En az 20 karakter giriniz'),
   contactPhone: z.string().min(10, 'Geçerli bir telefon numarası giriniz'),
-})
+});
 
-type ReturnFormValues = z.infer<typeof returnSchema>
+type ReturnFormValues = z.infer<typeof returnSchema>;
 
 export default function ReturnExchangePage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<ReturnFormValues>({
     resolver: zodResolver(returnSchema),
@@ -39,24 +46,24 @@ export default function ReturnExchangePage() {
       details: '',
       contactPhone: '',
     },
-  })
+  });
 
   const onSubmit = async (data: ReturnFormValues) => {
-    setIsLoading(true)
-    setError(null)
-    setSuccess(false)
+    setIsLoading(true);
+    setError(null);
+    setSuccess(false);
 
     try {
       // Burada gerçek API çağrısı yapılacak
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setSuccess(true)
-      form.reset()
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setSuccess(true);
+      form.reset();
     } catch {
-      setError('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.')
+      setError('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -103,17 +110,13 @@ export default function ReturnExchangePage() {
                             <FormControl>
                               <RadioGroupItem value="return" />
                             </FormControl>
-                            <FormLabel className="font-normal">
-                              İade
-                            </FormLabel>
+                            <FormLabel className="font-normal">İade</FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
                             <FormControl>
                               <RadioGroupItem value="exchange" />
                             </FormControl>
-                            <FormLabel className="font-normal">
-                              Değişim
-                            </FormLabel>
+                            <FormLabel className="font-normal">Değişim</FormLabel>
                           </FormItem>
                         </RadioGroup>
                       </FormControl>
@@ -207,5 +210,5 @@ export default function ReturnExchangePage() {
         </Card>
       </div>
     </div>
-  )
-} 
+  );
+}

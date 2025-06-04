@@ -1,8 +1,8 @@
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { deleteCategory } from "@/lib/nhost/mutations";
-import { getCategories } from "@/lib/nhost/queries";
+'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { deleteCategory } from '@/lib/nhost/mutations';
+import { getCategories } from '@/lib/nhost/queries';
 
 type Category = {
   id: string;
@@ -13,7 +13,7 @@ type Category = {
 export default function CategoryList() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadCategories();
@@ -21,25 +21,25 @@ export default function CategoryList() {
 
   const loadCategories = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getCategories();
       setCategories(data);
     } catch {
-      setError("Kategoriler yüklenemedi.");
+      setError('Kategoriler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Bu kategoriyi silmek istediğinizden emin misiniz?")) return;
+    if (!confirm('Bu kategoriyi silmek istediğinizden emin misiniz?')) return;
 
     try {
       await deleteCategory(id);
       await loadCategories();
     } catch {
-      setError("Kategori silinemedi.");
+      setError('Kategori silinemedi.');
     }
   };
 
@@ -60,7 +60,7 @@ export default function CategoryList() {
         </div>
       </div>
       <div className="divide-y divide-gray-200">
-        {categories.map((category) => (
+        {categories.map(category => (
           <div key={category.id} className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
@@ -87,4 +87,4 @@ export default function CategoryList() {
       </div>
     </div>
   );
-} 
+}

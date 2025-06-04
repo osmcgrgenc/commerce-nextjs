@@ -1,11 +1,7 @@
-import Link from "next/link";
-import { DocumentIcon, DocumentTextIcon, FolderIcon, TagIcon } from "@heroicons/react/24/outline";
+import Link from 'next/link';
+import { DocumentIcon, DocumentTextIcon, FolderIcon, TagIcon } from '@heroicons/react/24/outline';
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <aside className="w-64 bg-gray-800 text-white p-4">
@@ -63,9 +59,7 @@ export default function AdminLayout({
           </ul>
         </nav>
       </aside>
-      <main className="flex-1 bg-gray-100">
-        {children}
-      </main>
+      <main className="flex-1 bg-gray-100">{children}</main>
     </div>
   );
-} 
+}

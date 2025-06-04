@@ -1,13 +1,13 @@
-"use client";
-import { useState, useEffect } from "react";
-import { getOrderStatusStats } from "@/lib/nhost/queries";
+'use client';
+import { useState, useEffect } from 'react';
+import { getOrderStatusStats } from '@/lib/nhost/queries';
 
 type OrderStatusStats = Record<string, number>;
 
 export default function OrderStatusChart() {
   const [stats, setStats] = useState<OrderStatusStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadStats();
@@ -15,12 +15,12 @@ export default function OrderStatusChart() {
 
   const loadStats = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getOrderStatusStats();
       setStats(data);
     } catch {
-      setError("Sipariş durumu istatistikleri yüklenemedi.");
+      setError('Sipariş durumu istatistikleri yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -58,4 +58,4 @@ export default function OrderStatusChart() {
       </div>
     </div>
   );
-} 
+}

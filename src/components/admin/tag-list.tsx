@@ -1,14 +1,14 @@
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { getTags } from "@/lib/nhost/queries";
-import { deleteTag } from "@/lib/nhost/mutations";
-import { Tag } from "@/lib/nhost/types";
+'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { getTags } from '@/lib/nhost/queries';
+import { deleteTag } from '@/lib/nhost/mutations';
+import { Tag } from '@/lib/nhost/types';
 
 export default function TagList() {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadTags();
@@ -16,25 +16,25 @@ export default function TagList() {
 
   const loadTags = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getTags();
       setTags(data);
     } catch {
-      setError("Etiketler yüklenemedi.");
+      setError('Etiketler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Bu etiketi silmek istediğinizden emin misiniz?")) return;
+    if (!confirm('Bu etiketi silmek istediğinizden emin misiniz?')) return;
 
     try {
       await deleteTag(id);
       await loadTags();
     } catch {
-      setError("Etiket silinemedi.");
+      setError('Etiket silinemedi.');
     }
   };
 
@@ -55,7 +55,7 @@ export default function TagList() {
         </div>
       </div>
       <div className="divide-y divide-gray-200">
-        {tags.map((tag) => (
+        {tags.map(tag => (
           <div key={tag.id} className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
@@ -82,4 +82,4 @@ export default function TagList() {
       </div>
     </div>
   );
-} 
+}

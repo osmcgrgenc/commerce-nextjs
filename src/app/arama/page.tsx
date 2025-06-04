@@ -1,230 +1,200 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { ProductCard } from '@/components/product-card'
-import { ProductFilters } from '@/components/product-filters'
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ProductCard } from '@/components/products/product-card';
+import { ProductFilters } from '@/components/product-filters';
+import nhost from '@/lib/nhost/client';
 
-// Bu veri normalde bir API'den gelecek
-const products = [
-  {
-    id: 1,
-    name: 'Modern Köşe Koltuk',
-    price: 24999,
-    image: '/images/products/kose-koltuk-1.jpg',
-    href: '/urunler/modern-kose-koltuk',
-    category: 'Oturma Grubu',
-    color: 'Bej',
-    material: 'Kumaş',
-    style: 'Modern',
-  },
-  {
-    id: 2,
-    name: 'Yatak Odası Takımı',
-    price: 34999,
-    image: '/images/products/yatak-odasi.jpg',
-    href: '/urunler/yatak-odasi-takimi',
-    category: 'Yatak Odası',
-    color: 'Beyaz',
-    material: 'MDF',
-    style: 'Klasik',
-  },
-  {
-    id: 3,
-    name: '3+2 Koltuk Takımı',
-    price: 34999,
-    image: '/images/products/3-2-koltuk.jpg',
-    href: '/urunler/3-2-koltuk-takimi',
-    category: 'Oturma Grubu',
-  },
-  {
-    id: 4,
-    name: 'Yemek Odası Takımı',
-    price: 24999,
-    image: '/images/products/yemek-odasi.jpg',
-    href: '/urunler/yemek-odasi-takimi',
-    category: 'Yemek Odası',
-  },
-]
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  href: string;
+  category: string;
+  color?: string;
+  material?: string;
+  style?: string;
+}
 
-const filters = [
-  {
-    id: 'category',
-    name: 'Kategori',
-    options: [
-      { value: 'oturma-grubu', label: 'Oturma Grubu', count: 12 },
-      { value: 'yatak-odasi', label: 'Yatak Odası', count: 8 },
-      { value: 'yemek-odasi', label: 'Yemek Odası', count: 6 },
-      { value: 'cocuk-odasi', label: 'Çocuk Odası', count: 4 },
-    ],
-  },
-  {
-    id: 'color',
-    name: 'Renk',
-    options: [
-      { value: 'bej', label: 'Bej', count: 8 },
-      { value: 'beyaz', label: 'Beyaz', count: 6 },
-      { value: 'gri', label: 'Gri', count: 4 },
-      { value: 'lacivert', label: 'Lacivert', count: 2 },
-    ],
-  },
-  {
-    id: 'material',
-    name: 'Materyal',
-    options: [
-      { value: 'kumas', label: 'Kumaş', count: 10 },
-      { value: 'mdf', label: 'MDF', count: 8 },
-      { value: 'metal', label: 'Metal', count: 4 },
-      { value: 'cam', label: 'Cam', count: 2 },
-    ],
-  },
-  {
-    id: 'style',
-    name: 'Stil',
-    options: [
-      { value: 'modern', label: 'Modern', count: 12 },
-      { value: 'klasik', label: 'Klasik', count: 8 },
-      { value: 'minimal', label: 'Minimal', count: 6 },
-      { value: 'rustik', label: 'Rustik', count: 4 },
-    ],
-  },
-]
-
-const sortOptions = [
-  { value: 'newest', label: 'En Yeniler' },
-  { value: 'price-asc', label: 'Fiyat (Düşükten Yükseğe)' },
-  { value: 'price-desc', label: 'Fiyat (Yüksekten Düşüğe)' },
-  { value: 'name-asc', label: 'İsim (A-Z)' },
-  { value: 'name-desc', label: 'İsim (Z-A)' },
-]
+interface Filter {
+  id: string;
+  name: string;
+  options: Array<{
+    value: string;
+    label: string;
+    count: number;
+  }>;
+}
 
 export default function SearchPage() {
-  const searchParams = useSearchParams()
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '')
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
-  const [selectedSort, setSelectedSort] = useState(sortOptions[0].value)
-  const [filteredProducts, setFilteredProducts] = useState(products)
+  const searchParams = useSearchParams();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filters, setFilters] = useState<Filter[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let result = [...products]
+    const fetchProducts = async () => {
+      try {
+        const query = searchParams.get('q') || '';
+        const category = searchParams.get('category');
+        const color = searchParams.get('color');
+        const material = searchParams.get('material');
+        const style = searchParams.get('style');
+        const sort = searchParams.get('sort') || 'newest';
 
-    // Arama filtresi
-    if (searchQuery) {
-      result = result.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    }
+        const { data, error } = await nhost.graphql.request<{
+          products: Array<{
+            id: string;
+            name: string;
+            price: number;
+            images: Array<{ image_url: string; is_primary: boolean }>;
+            category: { name: string; slug: string };
+            color?: string;
+            material?: string;
+            style?: string;
+          }>;
+          filters: Array<{
+            id: string;
+            name: string;
+            options: Array<{
+              value: string;
+              label: string;
+              count: number;
+            }>;
+          }>;
+        }>(
+          `
+          query SearchProducts(
+            $query: String
+            $category: String
+            $color: String
+            $material: String
+            $style: String
+            $sort: String
+          ) {
+            products(
+              where: {
+                _or: [
+                  { name: { _ilike: $query } }
+                  { description: { _ilike: $query } }
+                ]
+                category: { slug: { _eq: $category } }
+                color: { _eq: $color }
+                material: { _eq: $material }
+                style: { _eq: $style }
+              }
+              order_by: {
+                created_at: desc
+                price: asc
+                name: asc
+              }
+            ) {
+              id
+              name
+              price
+              images(where: { is_primary: { _eq: true } }) {
+                image_url
+              }
+              category {
+                name
+                slug
+              }
+              color
+              material
+              style
+            }
+            filters {
+              id
+              name
+              options {
+                value
+                label
+                count
+              }
+            }
+          }
+        `,
+          {
+            query: query ? `%${query}%` : null,
+            category,
+            color,
+            material,
+            style,
+            sort,
+          }
+        );
 
-    // Kategori ve diğer filtreler
-    Object.entries(selectedFilters).forEach(([filterId, values]) => {
-      if (values.length > 0) {
-        result = result.filter((product) => {
-          const productValue = product[filterId as keyof typeof product]?.toString().toLowerCase()
-          return values.some((value) => productValue === value.toLowerCase())
-        })
+        if (error) throw error;
+
+        setProducts(
+          data.products.map(product => ({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0]?.image_url || '/images/placeholder.jpg',
+            href: `/urunler/${product.category.slug}/${product.id}`,
+            category: product.category.name,
+            color: product.color,
+            material: product.material,
+            style: product.style,
+          }))
+        );
+
+        setFilters(data.filters);
+      } catch (err) {
+        setError('Ürünler yüklenirken bir hata oluştu');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
       }
-    })
+    };
 
-    // Sıralama
-    switch (selectedSort) {
-      case 'price-asc':
-        result.sort((a, b) => a.price - b.price)
-        break
-      case 'price-desc':
-        result.sort((a, b) => b.price - a.price)
-        break
-      case 'name-asc':
-        result.sort((a, b) => a.name.localeCompare(b.name))
-        break
-      case 'name-desc':
-        result.sort((a, b) => b.name.localeCompare(a.name))
-        break
-      case 'newest':
-      default:
-        // Varsayılan sıralama (en yeniler)
-        break
-    }
+    fetchProducts();
+  }, [searchParams]);
 
-    setFilteredProducts(result)
-  }, [searchQuery, selectedFilters, selectedSort])
-
-  const handleFilterChange = (filters: Record<string, string[]>) => {
-    setSelectedFilters(filters)
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="animate-pulse">
+            <div className="aspect-square rounded-lg bg-gray-200" />
+            <div className="mt-4 space-y-2">
+              <div className="h-4 w-3/4 rounded bg-gray-200" />
+              <div className="h-4 w-1/2 rounded bg-gray-200" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   }
 
-  const handleSortChange = (sort: string) => {
-    setSelectedSort(sort)
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
   }
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Ürünler</h1>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ürün ara..."
-                className="block w-full rounded-md border-gray-300 pr-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 flex items-center pr-3"
-                  onClick={() => setSearchQuery('')}
-                >
-                  <span className="sr-only">Aramayı temizle</span>
-                  <svg
-                    className="h-5 w-5 text-gray-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="pt-24 pb-10">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900">Arama Sonuçları</h1>
+        <p className="mt-4 text-base text-gray-500">{products.length} ürün bulundu</p>
+      </div>
 
-        <div className="pt-24 lg:grid lg:grid-cols-4 lg:gap-x-8 xl:grid-cols-5">
-          {/* Filtreler */}
-          <div className="hidden lg:block">
-            <ProductFilters
-              filters={filters}
-              sortOptions={sortOptions}
-              onFilterChange={handleFilterChange}
-              onSortChange={handleSortChange}
-            />
-          </div>
+      <div className="pb-24 pt-6 lg:grid lg:grid-cols-4 lg:gap-x-8 xl:grid-cols-5">
+        <aside>
+          <ProductFilters filters={filters} />
+        </aside>
 
-          {/* Ürün Listesi */}
-          <div className="mt-6 lg:col-span-3 lg:mt-0 xl:col-span-4">
-            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-medium text-gray-900">Ürün bulunamadı</h3>
-                <p className="mt-2 text-sm text-gray-500">
-                  Arama kriterlerinize uygun ürün bulunamadı. Lütfen farklı filtreler deneyin.
-                </p>
-              </div>
-            )}
+        <main className="mt-6 lg:col-span-3 lg:mt-0 xl:col-span-4">
+          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
-        </div>
+        </main>
       </div>
     </div>
-  )
-} 
+  );
+}

@@ -43,18 +43,13 @@ export default function ProfilePage() {
       <div className="max-w-3xl mx-auto">
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Profil Bilgileri
-            </h3>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">Profil Bilgileri</h3>
             <div className="mt-2 max-w-xl text-sm text-gray-500">
               <p>Hesap bilgilerinizi buradan güncelleyebilirsiniz.</p>
             </div>
             <form onSubmit={handleSubmit} className="mt-5 space-y-6">
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   E-posta
                 </label>
                 <div className="mt-1">
@@ -70,10 +65,7 @@ export default function ProfilePage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="displayName"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700">
                   Görünen Ad
                 </label>
                 <div className="mt-1">
@@ -82,17 +74,14 @@ export default function ProfilePage() {
                     name="displayName"
                     id="displayName"
                     value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
+                    onChange={e => setDisplayName(e.target.value)}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="avatarUrl"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="avatarUrl" className="block text-sm font-medium text-gray-700">
                   Profil Fotoğrafı URL
                 </label>
                 <div className="mt-1">
@@ -101,7 +90,7 @@ export default function ProfilePage() {
                     name="avatarUrl"
                     id="avatarUrl"
                     value={avatarUrl}
-                    onChange={(e) => setAvatarUrl(e.target.value)}
+                    onChange={e => setAvatarUrl(e.target.value)}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -122,4 +111,4 @@ export default function ProfilePage() {
       </div>
     </div>
   );
-} 
+}

@@ -1,15 +1,14 @@
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { getPages } from "@/lib/nhost/queries";
-import { deletePage } from "@/lib/nhost/mutations";
-import { Page } from "@/lib/nhost/types";
-
+'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { getPages } from '@/lib/nhost/queries';
+import { deletePage } from '@/lib/nhost/mutations';
+import { Page } from '@/lib/nhost/types';
 
 export default function PageList() {
   const [pages, setPages] = useState<Page[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadPages();
@@ -17,25 +16,25 @@ export default function PageList() {
 
   const loadPages = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getPages();
       setPages(data);
     } catch {
-      setError("Sayfalar yüklenemedi.");
+      setError('Sayfalar yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Bu sayfayı silmek istediğinizden emin misiniz?")) return;
+    if (!confirm('Bu sayfayı silmek istediğinizden emin misiniz?')) return;
 
     try {
       await deletePage(id);
       await loadPages();
     } catch {
-      setError("Sayfa silinemedi.");
+      setError('Sayfa silinemedi.');
     }
   };
 
@@ -56,14 +55,14 @@ export default function PageList() {
         </div>
       </div>
       <div className="divide-y divide-gray-200">
-        {pages.map((page) => (
+        {pages.map(page => (
           <div key={page.id} className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
                 <h4 className="text-lg font-medium text-gray-900">{page.title}</h4>
                 <p className="text-sm text-gray-500">/{page.slug}</p>
                 <p className="text-sm text-gray-500">
-                  Durum: {page.status === "published" ? "Yayında" : "Taslak"}
+                  Durum: {page.status === 'published' ? 'Yayında' : 'Taslak'}
                 </p>
                 <p className="text-sm text-gray-500">
                   Son güncelleme: {new Date(page.updated_at).toLocaleDateString()}
@@ -89,4 +88,4 @@ export default function PageList() {
       </div>
     </div>
   );
-} 
+}

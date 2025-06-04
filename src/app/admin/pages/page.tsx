@@ -1,4 +1,4 @@
-import PageList from "../../../components/admin/page-list";
+import PageList from '../../../components/admin/page-list';
 
 export default function PagesPage() {
   return (
@@ -7,4 +7,4 @@ export default function PagesPage() {
       <PageList />
     </div>
   );
-} 
+}

@@ -1,13 +1,13 @@
-"use client";
-import { useState, useEffect } from "react";
-import { getRecentOrders } from "@/lib/nhost/queries";
-import { Order } from "@/lib/nhost/types";
-import Link from "next/link";
+'use client';
+import { useState, useEffect } from 'react';
+import { getRecentOrders } from '@/lib/nhost/queries';
+import { Order } from '@/lib/nhost/types';
+import Link from 'next/link';
 
 export default function RecentOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadOrders();
@@ -15,12 +15,12 @@ export default function RecentOrders() {
 
   const loadOrders = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getRecentOrders();
       setOrders(data);
     } catch {
-      setError("Son siparişler yüklenemedi.");
+      setError('Son siparişler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -36,7 +36,7 @@ export default function RecentOrders() {
         <h3 className="text-lg font-medium text-gray-900">Son Siparişler</h3>
       </div>
       <div className="divide-y divide-gray-200">
-        {orders.map((order) => (
+        {orders.map(order => (
           <div key={order.id} className="px-6 py-4">
             <div className="flex justify-between items-center">
               <div>
@@ -65,4 +65,4 @@ export default function RecentOrders() {
       </div>
     </div>
   );
-} 
+}

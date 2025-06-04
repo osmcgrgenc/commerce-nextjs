@@ -1,4 +1,4 @@
-import PostForm from "../../../../../components/admin/post-form";
+import PostForm from '../../../../../components/admin/post-form';
 
 type Props = {
   params: {
@@ -13,4 +13,4 @@ export default function EditPostPage({ params }: Props) {
       <PostForm postId={params.id} />
     </div>
   );
-} 
+}

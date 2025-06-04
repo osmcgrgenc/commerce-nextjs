@@ -12,42 +12,49 @@ export default function TermsPage() {
             <section>
               <h2 className="text-xl font-semibold text-gray-900">1. Genel Hükümler</h2>
               <p className="mt-4">
-                Bu web sitesini kullanarak, aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız. Bu koşulları kabul etmiyorsanız, lütfen sitemizi kullanmayınız.
+                Bu web sitesini kullanarak, aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız.
+                Bu koşulları kabul etmiyorsanız, lütfen sitemizi kullanmayınız.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">2. Üyelik</h2>
               <p className="mt-4">
-                Sitemize üye olmak için 18 yaşından büyük olmanız ve geçerli bir e-posta adresine sahip olmanız gerekmektedir. Üyelik bilgilerinizin doğruluğundan ve güncelliğinden siz sorumlusunuz.
+                Sitemize üye olmak için 18 yaşından büyük olmanız ve geçerli bir e-posta adresine
+                sahip olmanız gerekmektedir. Üyelik bilgilerinizin doğruluğundan ve güncelliğinden
+                siz sorumlusunuz.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">3. Sipariş ve Ödeme</h2>
               <p className="mt-4">
-                Siparişleriniz, ödeme onayından sonra işleme alınır. Ödeme seçenekleri ve koşulları hakkında detaylı bilgi için ödeme sayfamızı inceleyebilirsiniz.
+                Siparişleriniz, ödeme onayından sonra işleme alınır. Ödeme seçenekleri ve koşulları
+                hakkında detaylı bilgi için ödeme sayfamızı inceleyebilirsiniz.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">4. Fikri Mülkiyet Hakları</h2>
               <p className="mt-4">
-                Sitemizde yer alan tüm içerikler (metin, görsel, logo vb.) Liman Design'a aittir ve telif hakları ile korunmaktadır. İzinsiz kullanımı yasaktır.
+                Sitemizde yer alan tüm içerikler (metin, görsel, logo vb.) Liman Design'a aittir ve
+                telif hakları ile korunmaktadır. İzinsiz kullanımı yasaktır.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">5. Sorumluluk Sınırları</h2>
               <p className="mt-4">
-                Sitemiz, ürünlerin kullanımından kaynaklanan doğrudan veya dolaylı zararlardan sorumlu tutulamaz. Ürünlerin kullanımı ile ilgili tüm riskler kullanıcıya aittir.
+                Sitemiz, ürünlerin kullanımından kaynaklanan doğrudan veya dolaylı zararlardan
+                sorumlu tutulamaz. Ürünlerin kullanımı ile ilgili tüm riskler kullanıcıya aittir.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900">6. Değişiklikler</h2>
               <p className="mt-4">
-                Bu kullanım koşullarını herhangi bir zamanda değiştirme hakkını saklı tutarız. Değişiklikler sitede yayınlandığı anda yürürlüğe girer.
+                Bu kullanım koşullarını herhangi bir zamanda değiştirme hakkını saklı tutarız.
+                Değişiklikler sitede yayınlandığı anda yürürlüğe girer.
               </p>
             </section>
 
@@ -65,5 +72,5 @@ export default function TermsPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

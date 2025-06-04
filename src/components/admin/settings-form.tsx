@@ -1,35 +1,35 @@
-"use client";
-import { useState, useEffect } from "react";
-import { getSettings } from "@/lib/nhost/queries";
-import { updateSettings } from "@/lib/nhost/mutations";
-import { Settings } from "@/lib/nhost/types";
+'use client';
+import { useState, useEffect } from 'react';
+import { getSettings } from '@/lib/nhost/queries';
+import { updateSettings } from '@/lib/nhost/mutations';
+import { Settings } from '@/lib/nhost/types';
 
 export default function SettingsForm() {
   const [settings, setSettings] = useState<Settings>({
-    id: "",
-    site_name: "",
-    site_description: "",
-    contact_email: "",
-    contact_phone: "",
-    theme: "light",
-    currency: "TRY",
+    id: '',
+    site_name: '',
+    site_description: '',
+    contact_email: '',
+    contact_phone: '',
+    theme: 'light',
+    currency: 'TRY',
     tax_rate: 18,
     social_media: {
-      facebook: "",
-      twitter: "",
-      instagram: "",
-      linkedin: "",
+      facebook: '',
+      twitter: '',
+      instagram: '',
+      linkedin: '',
     },
     seo: {
-      meta_title: "",
-      meta_description: "",
-      keywords: "",
+      meta_title: '',
+      meta_description: '',
+      keywords: '',
     },
-    updated_at: "",
+    updated_at: '',
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     loadSettings();
@@ -37,14 +37,14 @@ export default function SettingsForm() {
 
   const loadSettings = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getSettings();
       if (data) {
         setSettings(data);
       }
     } catch {
-      setError("Ayarlar yüklenemedi.");
+      setError('Ayarlar yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -52,21 +52,23 @@ export default function SettingsForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
     try {
       await updateSettings(settings);
-      setSuccess("Ayarlar başarıyla güncellendi.");
+      setSuccess('Ayarlar başarıyla güncellendi.');
     } catch {
-      setError("Ayarlar güncellenemedi.");
+      setError('Ayarlar güncellenemedi.');
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setSettings((prev) => ({
+    setSettings(prev => ({
       ...prev,
-      [name]: name === "tax_rate" ? parseFloat(value) : value,
+      [name]: name === 'tax_rate' ? parseFloat(value) : value,
     }));
   };
 
@@ -174,4 +176,4 @@ export default function SettingsForm() {
       </div>
     </form>
   );
-} 
+}

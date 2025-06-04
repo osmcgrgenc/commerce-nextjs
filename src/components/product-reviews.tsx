@@ -1,45 +1,50 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { Star, ThumbsUp, ThumbsDown } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import Image from 'next/image';
+import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Review {
-  id: number
+  id: number;
   user: {
-    name: string
-    avatar: string
-  }
-  rating: number
-  date: string
-  title: string
-  comment: string
-  likes: number
-  dislikes: number
-  verified: boolean
+    name: string;
+    avatar: string;
+  };
+  rating: number;
+  date: string;
+  title: string;
+  comment: string;
+  likes: number;
+  dislikes: number;
+  verified: boolean;
 }
 
 interface ProductReviewsProps {
-  productId: number
-  averageRating: number
-  totalReviews: number
-  reviews: Review[]
+  productId: number;
+  averageRating: number;
+  totalReviews: number;
+  reviews: Review[];
 }
 
-export function ProductReviews({ productId, averageRating, totalReviews, reviews }: ProductReviewsProps) {
+export function ProductReviews({
+  productId,
+  averageRating,
+  totalReviews,
+  reviews,
+}: ProductReviewsProps) {
   const [newReview, setNewReview] = useState({
     rating: 0,
     title: '',
     comment: '',
-  })
+  });
 
   const handleSubmitReview = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Burada normalde API'ye gönderilecek
-    toast.success('Yorumunuz başarıyla eklendi')
-    setNewReview({ rating: 0, title: '', comment: '' })
-  }
+    toast.success('Yorumunuz başarıyla eklendi');
+    setNewReview({ rating: 0, title: '', comment: '' });
+  };
 
   return (
     <div className="bg-white">
@@ -50,7 +55,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
           <div className="mt-3 flex items-center">
             <div>
               <div className="flex items-center">
-                {[0, 1, 2, 3, 4].map((rating) => (
+                {[0, 1, 2, 3, 4].map(rating => (
                   <Star
                     key={rating}
                     className={`h-5 w-5 flex-shrink-0 ${
@@ -62,9 +67,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
               </div>
               <p className="sr-only">{averageRating} out of 5 stars</p>
             </div>
-            <p className="ml-3 text-sm text-gray-700">
-              {totalReviews} değerlendirme
-            </p>
+            <p className="ml-3 text-sm text-gray-700">{totalReviews} değerlendirme</p>
           </div>
 
           {/* Yorum Formu */}
@@ -76,7 +79,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
                   Puanınız
                 </label>
                 <div className="mt-2 flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((rating) => (
+                  {[1, 2, 3, 4, 5].map(rating => (
                     <button
                       key={rating}
                       type="button"
@@ -101,7 +104,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
                   type="text"
                   id="title"
                   value={newReview.title}
-                  onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
+                  onChange={e => setNewReview({ ...newReview, title: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
@@ -115,7 +118,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
                   id="comment"
                   rows={4}
                   value={newReview.comment}
-                  onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                  onChange={e => setNewReview({ ...newReview, comment: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
@@ -134,7 +137,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
         <div className="mt-16 lg:col-span-7 lg:mt-0">
           <div className="flow-root">
             <div className="-my-12 divide-y divide-gray-200">
-              {reviews.map((review) => (
+              {reviews.map(review => (
                 <div key={review.id} className="py-12">
                   <div className="flex items-center">
                     <Image
@@ -147,7 +150,7 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
                     <div className="ml-4">
                       <h4 className="text-sm font-bold text-gray-900">{review.user.name}</h4>
                       <div className="mt-1 flex items-center">
-                        {[0, 1, 2, 3, 4].map((rating) => (
+                        {[0, 1, 2, 3, 4].map(rating => (
                           <Star
                             key={rating}
                             className={`h-4 w-4 flex-shrink-0 ${
@@ -188,5 +191,5 @@ export function ProductReviews({ productId, averageRating, totalReviews, reviews
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

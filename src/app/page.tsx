@@ -1,8 +1,18 @@
-import { Suspense } from 'react'
-import { ProductCard } from '@/components/products/product-card'
-import { CategoryCard } from '@/components/category-card'
-import { HeroSlider } from '@/components/hero-slider'
-import { getCategories, getFeaturedProducts, getBanners } from '@/lib/api'
+import { Suspense } from 'react';
+import { ProductCard } from '@/components/products/product-card';
+import { CategoryCard } from '@/components/category-card';
+import { HeroSlider } from '@/components/hero-slider';
+import { getCategories, getFeaturedProducts, getBanners } from '@/lib/api';
+import { generateMetadata } from '@/lib/metadata';
+import Image from 'next/image';
+import Link from 'next/link';
+
+export const metadata = generateMetadata({
+  title: 'Liman Design - Modern Mobilya ve Dekorasyon',
+  description:
+    'Liman Design ile evinize modern ve şık mobilyalar, dekorasyon ürünleri ve aksesuarlar ekleyin. Kaliteli ürünler, uygun fiyatlar ve hızlı teslimat.',
+  image: '/images/home-og.jpg',
+});
 
 // Yükleme durumu için bileşenler
 function CategoriesSkeleton() {
@@ -15,7 +25,7 @@ function CategoriesSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function ProductsSkeleton() {
@@ -31,48 +41,48 @@ function ProductsSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 // Kategoriler bölümü
 async function CategoriesSection() {
-  const categories = await getCategories()
+  const categories = await getCategories();
 
   return (
     <section className="container mx-auto px-4">
       <h2 className="text-3xl font-bold">Kategoriler</h2>
       <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {categories.map((category) => (
+        {categories.map(category => (
           <CategoryCard key={category.id} category={category} />
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 // Öne çıkan ürünler bölümü
 async function FeaturedProductsSection() {
-  const products = await getFeaturedProducts()
+  const products = await getFeaturedProducts();
 
   return (
     <section className="container mx-auto px-4">
       <h2 className="text-3xl font-bold">Öne Çıkan Ürünler</h2>
       <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard 
-            key={product.id} 
-            {...product} 
+        {products.map(product => (
+          <ProductCard
+            key={product.id}
+            {...product}
             priority={product.id <= 4} // İlk 4 ürün için priority true
           />
         ))}
       </div>
     </section>
-  )
+  );
 }
 
 // Ana sayfa bileşeni
 export default async function HomePage() {
-  const banners = await getBanners()
+  const banners = await getBanners();
 
   return (
     <main>
@@ -87,5 +97,5 @@ export default async function HomePage() {
         </Suspense>
       </div>
     </main>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-"use client";
-import { Suspense } from "react";
-import AdminGuard from "@/components/auth/admin-guard";
-import ProductList from "@/components/admin/product-list";
-import ProductForm from "@/components/admin/product-form";
+'use client';
+import { Suspense } from 'react';
+import AdminGuard from '@/components/auth/admin-guard';
+import ProductList from '@/components/admin/product-list';
+import ProductForm from '@/components/admin/product-form';
 
 export default function AdminProductsPage() {
   return (
@@ -22,4 +22,4 @@ export default function AdminProductsPage() {
       </main>
     </AdminGuard>
   );
-} 
+}

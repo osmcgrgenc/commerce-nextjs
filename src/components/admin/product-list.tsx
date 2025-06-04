@@ -1,37 +1,41 @@
-"use client";
-import { useState } from "react";
-import { getProducts } from "@/lib/nhost/queries";
-import { deleteProduct, updateProduct } from "@/lib/nhost/mutations";
-import { Product } from "@/lib/nhost/types";
+'use client';
+import { useState } from 'react';
+import { getProducts } from '@/lib/nhost/queries';
+import { deleteProduct, updateProduct } from '@/lib/nhost/mutations';
+import { Product } from '@/lib/nhost/types';
 
 export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [editingProduct, setEditingProduct] = useState<{ id: string; name: string; price: number } | null>(null);
-  const [editName, setEditName] = useState("");
-  const [editPrice, setEditPrice] = useState("");
+  const [error, setError] = useState('');
+  const [editingProduct, setEditingProduct] = useState<{
+    id: string;
+    name: string;
+    price: number;
+  } | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editPrice, setEditPrice] = useState('');
 
   const loadProducts = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getProducts();
       setProducts(data);
     } catch {
-      setError("Ürünler yüklenemedi.");
+      setError('Ürünler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+    if (confirm('Bu ürünü silmek istediğinize emin misiniz?')) {
       try {
         await deleteProduct(id);
         await loadProducts();
       } catch {
-        alert("Ürün silinemedi.");
+        alert('Ürün silinemedi.');
       }
     }
   };
@@ -48,16 +52,16 @@ export default function ProductList() {
       await updateProduct(editingProduct.id, {
         name: editName,
         price: Number(editPrice),
-        slug: "",
-        description: "",
+        slug: '',
+        description: '',
         stock: 0,
         images: [],
-        status: "active",
+        status: 'active',
       });
       setEditingProduct(null);
       await loadProducts();
     } catch {
-      alert("Ürün güncellenemedi.");
+      alert('Ürün güncellenemedi.');
     }
   };
 
@@ -68,7 +72,7 @@ export default function ProductList() {
   return (
     <>
       <ul className="divide-y divide-gray-200">
-        {products.map((product) => (
+        {products.map(product => (
           <li key={product.id} className="py-2 flex justify-between items-center">
             <span>{product.name}</span>
             <div className="flex items-center gap-2">
@@ -97,14 +101,14 @@ export default function ProductList() {
             <input
               type="text"
               value={editName}
-              onChange={(e) => setEditName(e.target.value)}
+              onChange={e => setEditName(e.target.value)}
               className="border p-2 rounded mb-2 w-full"
               placeholder="Ürün adı"
             />
             <input
               type="number"
               value={editPrice}
-              onChange={(e) => setEditPrice(e.target.value)}
+              onChange={e => setEditPrice(e.target.value)}
               className="border p-2 rounded mb-2 w-full"
               placeholder="Fiyat"
             />
@@ -127,4 +131,4 @@ export default function ProductList() {
       )}
     </>
   );
-} 
+}

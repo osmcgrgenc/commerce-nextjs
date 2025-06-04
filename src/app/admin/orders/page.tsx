@@ -1,4 +1,4 @@
-import OrderList from "@/components/admin/order-list";
+import OrderList from '@/components/admin/order-list';
 
 export default function OrdersPage() {
   return (
@@ -7,4 +7,4 @@ export default function OrdersPage() {
       <OrderList />
     </div>
   );
-} 
+}

@@ -1,8 +1,8 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { createCategory, updateCategory } from "@/lib/nhost/mutations";
-import { getCategories } from "@/lib/nhost/queries";
+'use client';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createCategory, updateCategory } from '@/lib/nhost/mutations';
+import { getCategories } from '@/lib/nhost/queries';
 
 type CategoryFormProps = {
   categoryId?: string;
@@ -16,10 +16,10 @@ type CategoryData = {
 export default function CategoryForm({ categoryId }: CategoryFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState<CategoryData>({
-    name: "",
-    slug: "",
+    name: '',
+    slug: '',
   });
 
   useEffect(() => {
@@ -30,10 +30,10 @@ export default function CategoryForm({ categoryId }: CategoryFormProps) {
 
   const loadCategory = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const categories = await getCategories();
-      const category = categories.find((c) => c.id === categoryId);
+      const category = categories.find(c => c.id === categoryId);
       if (category) {
         setFormData({
           name: category.name,
@@ -41,7 +41,7 @@ export default function CategoryForm({ categoryId }: CategoryFormProps) {
         });
       }
     } catch {
-      setError("Kategori yüklenemedi.");
+      setError('Kategori yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -50,7 +50,7 @@ export default function CategoryForm({ categoryId }: CategoryFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
       if (categoryId) {
@@ -58,9 +58,9 @@ export default function CategoryForm({ categoryId }: CategoryFormProps) {
       } else {
         await createCategory(formData);
       }
-      router.push("/admin/categories");
+      router.push('/admin/categories');
     } catch {
-      setError("Kategori kaydedilemedi.");
+      setError('Kategori kaydedilemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +68,7 @@ export default function CategoryForm({ categoryId }: CategoryFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   if (isLoading) return <div>Yükleniyor...</div>;
@@ -120,9 +120,9 @@ export default function CategoryForm({ categoryId }: CategoryFormProps) {
           disabled={isLoading}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
         >
-          {isLoading ? "Kaydediliyor..." : "Kaydet"}
+          {isLoading ? 'Kaydediliyor...' : 'Kaydet'}
         </button>
       </div>
     </form>
   );
-} 
+}

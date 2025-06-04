@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import { useState, memo, useCallback } from 'react'
-import { Heart, Share2, ShoppingCart } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState, memo, useCallback } from 'react';
+import { Heart, Share2, ShoppingCart } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ProductActionsProps {
-  stock: number
-  onAddToCart: () => void
-  onShare: () => void
+  stock: number;
+  onAddToCart: () => void;
+  onShare: () => void;
 }
 
-export const ProductActions = memo(function ProductActions({ 
-  stock, 
-  onAddToCart, 
-  onShare 
+export const ProductActions = memo(function ProductActions({
+  stock,
+  onAddToCart,
+  onShare,
 }: ProductActionsProps) {
-  const [isFavorite, setIsFavorite] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleAddToFavorites = useCallback(() => {
-    setIsFavorite(prev => !prev)
-    toast.success(isFavorite ? 'Favorilerden çıkarıldı' : 'Favorilere eklendi')
-  }, [isFavorite])
+    setIsFavorite(prev => !prev);
+    toast.success(isFavorite ? 'Favorilerden çıkarıldı' : 'Favorilere eklendi');
+  }, [isFavorite]);
 
-  const buttonText = stock === 0 ? 'Stokta Yok' : 'Sepete Ekle'
+  const buttonText = stock === 0 ? 'Stokta Yok' : 'Sepete Ekle';
 
   return (
     <div className="mt-4 flex items-center justify-between">
@@ -52,5 +52,5 @@ export const ProductActions = memo(function ProductActions({
         {buttonText}
       </button>
     </div>
-  )
-}) 
+  );
+});

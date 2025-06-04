@@ -1,13 +1,13 @@
-"use client";
-import { useState, useEffect } from "react";
-import { getCustomers } from "@/lib/nhost/queries";
-import { Customer } from "@/lib/nhost/types";
-import Link from "next/link";
+'use client';
+import { useState, useEffect } from 'react';
+import { getCustomers } from '@/lib/nhost/queries';
+import { Customer } from '@/lib/nhost/types';
+import Link from 'next/link';
 
 export default function CustomerList() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadCustomers();
@@ -15,12 +15,12 @@ export default function CustomerList() {
 
   const loadCustomers = async () => {
     setIsLoading(true);
-    setError("");
+    setError('');
     try {
       const data = await getCustomers();
       setCustomers(data);
     } catch {
-      setError("Müşteriler yüklenemedi.");
+      setError('Müşteriler yüklenemedi.');
     } finally {
       setIsLoading(false);
     }
@@ -50,16 +50,16 @@ export default function CustomerList() {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {customers.map((customer) => (
+          {customers.map(customer => (
             <tr key={customer.id}>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-medium text-gray-900">
-                  {customer.display_name || "İsimsiz Müşteri"}
+                  {customer.display_name || 'İsimsiz Müşteri'}
                 </div>
                 <div className="text-sm text-gray-500">{customer.email}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{customer.phone_number || "-"}</div>
+                <div className="text-sm text-gray-900">{customer.phone_number || '-'}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">
@@ -80,4 +80,4 @@ export default function CustomerList() {
       </table>
     </div>
   );
-} 
+}

@@ -1,5 +1,5 @@
-import PostList from "@/components/admin/post-list";
-import { getPosts } from "@/lib/nhost/queries";
+import PostList from '@/components/admin/post-list';
+import { getPosts } from '@/lib/nhost/queries';
 
 export default async function PostsPage() {
   const posts = await getPosts();
@@ -9,4 +9,4 @@ export default async function PostsPage() {
       <PostList posts={posts} />
     </div>
   );
-} 
+}

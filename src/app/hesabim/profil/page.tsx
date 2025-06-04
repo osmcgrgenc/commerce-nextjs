@@ -1,70 +1,68 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useAuthenticationStatus, useUserData, useUpdateUser } from '@nhost/nextjs'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { useAuthenticationStatus, useUserData, useUpdateUser } from '@nhost/nextjs';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
-  const router = useRouter()
-  const { isAuthenticated, isLoading } = useAuthenticationStatus()
-  const user = useUserData()
-  const { updateUser } = useUpdateUser()
-  const [isUpdating, setIsUpdating] = useState(false)
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuthenticationStatus();
+  const user = useUserData();
+  const { updateUser } = useUpdateUser();
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     phone: user?.phone || '',
-  })
+  });
 
   if (isLoading) {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">Yükleniyor...</div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
-    router.push('/auth/login')
-    return null
+    router.push('/auth/login');
+    return null;
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
+    const { name, value } = e.target;
+    setFormData(prev => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsUpdating(true)
+    e.preventDefault();
+    setIsUpdating(true);
 
     try {
       await updateUser({
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
-      })
-      toast.success('Profil bilgileriniz güncellendi')
+      });
+      toast.success('Profil bilgileriniz güncellendi');
     } catch (error) {
-      toast.error('Profil güncellenirken bir hata oluştu')
+      toast.error('Profil güncellenirken bir hata oluştu');
     } finally {
-      setIsUpdating(false)
+      setIsUpdating(false);
     }
-  }
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-2xl font-bold leading-6 text-gray-900">
-              Profil Bilgileri
-            </h3>
+            <h3 className="text-2xl font-bold leading-6 text-gray-900">Profil Bilgileri</h3>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -138,5 +136,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

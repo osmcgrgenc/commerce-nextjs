@@ -1,4 +1,4 @@
-import PageForm from "../../../../components/admin/page-form";
+import PageForm from '../../../../components/admin/page-form';
 
 export default function NewPagePage() {
   return (
@@ -7,4 +7,4 @@ export default function NewPagePage() {
       <PageForm />
     </div>
   );
-} 
+}

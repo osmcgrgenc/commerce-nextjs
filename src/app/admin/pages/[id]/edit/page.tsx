@@ -1,4 +1,4 @@
-import PageForm from "../../../../../components/admin/page-form";
+import PageForm from '../../../../../components/admin/page-form';
 
 type Props = {
   params: {
@@ -13,4 +13,4 @@ export default function EditPagePage({ params }: Props) {
       <PageForm pageId={params.id} />
     </div>
   );
-} 
+}

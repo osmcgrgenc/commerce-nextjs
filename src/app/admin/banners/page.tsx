@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Plus, Pencil, Trash2, ArrowUp, ArrowDown } from 'lucide-react'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import { Plus, Pencil, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Banner {
-  id: number
-  title: string
-  description: string
-  image: string
-  buttonText: string
-  buttonLink: string
-  isActive: boolean
-  order: number
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  buttonText: string;
+  buttonLink: string;
+  isActive: boolean;
+  order: number;
 }
 
 const initialBanners: Banner[] = [
@@ -26,59 +26,57 @@ const initialBanners: Banner[] = [
     isActive: true,
     order: 1,
   },
-]
+];
 
 export default function BannersPage() {
-  const [banners, setBanners] = useState<Banner[]>(initialBanners)
-  const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [banners, setBanners] = useState<Banner[]>(initialBanners);
+  const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddBanner = () => {
-    setEditingBanner(null)
-    setIsModalOpen(true)
-  }
+    setEditingBanner(null);
+    setIsModalOpen(true);
+  };
 
   const handleEditBanner = (banner: Banner) => {
-    setEditingBanner(banner)
-    setIsModalOpen(true)
-  }
+    setEditingBanner(banner);
+    setIsModalOpen(true);
+  };
 
   const handleDeleteBanner = (id: number) => {
-    setBanners(banners.filter((banner) => banner.id !== id))
-    toast.success('Banner başarıyla silindi')
-  }
+    setBanners(banners.filter(banner => banner.id !== id));
+    toast.success('Banner başarıyla silindi');
+  };
 
   const handleMoveBanner = (id: number, direction: 'up' | 'down') => {
-    const currentIndex = banners.findIndex((banner) => banner.id === id)
+    const currentIndex = banners.findIndex(banner => banner.id === id);
     if (
       (direction === 'up' && currentIndex === 0) ||
       (direction === 'down' && currentIndex === banners.length - 1)
     ) {
-      return
+      return;
     }
 
-    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
-    const newBanners = [...banners]
-    const temp = newBanners[currentIndex]
-    newBanners[currentIndex] = newBanners[newIndex]
-    newBanners[newIndex] = temp
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    const newBanners = [...banners];
+    const temp = newBanners[currentIndex];
+    newBanners[currentIndex] = newBanners[newIndex];
+    newBanners[newIndex] = temp;
 
-    setBanners(newBanners)
-    toast.success('Banner sırası güncellendi')
-  }
+    setBanners(newBanners);
+    toast.success('Banner sırası güncellendi');
+  };
 
   const handleSaveBanner = (banner: Banner) => {
     if (editingBanner) {
-      setBanners(
-        banners.map((b) => (b.id === banner.id ? { ...banner, order: b.order } : b))
-      )
-      toast.success('Banner başarıyla güncellendi')
+      setBanners(banners.map(b => (b.id === banner.id ? { ...banner, order: b.order } : b)));
+      toast.success('Banner başarıyla güncellendi');
     } else {
-      setBanners([...banners, { ...banner, id: Date.now(), order: banners.length + 1 }])
-      toast.success('Banner başarıyla eklendi')
+      setBanners([...banners, { ...banner, id: Date.now(), order: banners.length + 1 }]);
+      toast.success('Banner başarıyla eklendi');
     }
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -115,7 +113,7 @@ export default function BannersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {banners.map((banner) => (
+            {banners.map(banner => (
               <tr key={banner.id}>
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="flex items-center space-x-2">
@@ -150,9 +148,7 @@ export default function BannersPage() {
                 <td className="whitespace-nowrap px-6 py-4">
                   <span
                     className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                      banner.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
+                      banner.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}
                   >
                     {banner.isActive ? 'Aktif' : 'Pasif'}
@@ -188,13 +184,13 @@ export default function BannersPage() {
         />
       )}
     </div>
-  )
+  );
 }
 
 interface BannerModalProps {
-  banner: Banner | null
-  onClose: () => void
-  onSave: (banner: Banner) => void
+  banner: Banner | null;
+  onClose: () => void;
+  onSave: (banner: Banner) => void;
 }
 
 function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
@@ -207,26 +203,24 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
       buttonLink: '',
       isActive: true,
     }
-  )
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSave(formData as Banner)
-  }
+    e.preventDefault();
+    onSave(formData as Banner);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-2xl rounded-lg bg-white p-6">
-        <h2 className="mb-4 text-xl font-bold">
-          {banner ? 'Banner Düzenle' : 'Yeni Banner Ekle'}
-        </h2>
+        <h2 className="mb-4 text-xl font-bold">{banner ? 'Banner Düzenle' : 'Yeni Banner Ekle'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Başlık</label>
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={e => setFormData({ ...formData, title: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
@@ -235,7 +229,7 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
             <label className="block text-sm font-medium text-gray-700">Açıklama</label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={e => setFormData({ ...formData, description: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               rows={3}
               required
@@ -246,7 +240,7 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
             <input
               type="text"
               value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              onChange={e => setFormData({ ...formData, image: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
@@ -256,7 +250,7 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
             <input
               type="text"
               value={formData.buttonText}
-              onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
+              onChange={e => setFormData({ ...formData, buttonText: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
@@ -266,7 +260,7 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
             <input
               type="text"
               value={formData.buttonLink}
-              onChange={(e) => setFormData({ ...formData, buttonLink: e.target.value })}
+              onChange={e => setFormData({ ...formData, buttonLink: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
@@ -275,7 +269,7 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
             <input
               type="checkbox"
               checked={formData.isActive}
-              onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+              onChange={e => setFormData({ ...formData, isActive: e.target.checked })}
               className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <label className="ml-2 block text-sm text-gray-900">Aktif</label>
@@ -298,5 +292,5 @@ function BannerModal({ banner, onClose, onSave }: BannerModalProps) {
         </form>
       </div>
     </div>
-  )
-} 
+  );
+}

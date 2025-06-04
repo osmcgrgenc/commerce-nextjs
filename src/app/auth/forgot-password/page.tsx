@@ -38,13 +38,11 @@ export default function ForgotPasswordPage() {
               className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="E-posta adresi"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
           </div>
 
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error.message}</div>
-          )}
+          {error && <div className="text-red-500 text-sm text-center">{error.message}</div>}
 
           {isSent && (
             <div className="text-green-500 text-sm text-center">
@@ -63,10 +61,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           <div className="text-sm text-center">
-            <Link
-              href="/auth/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+            <Link href="/auth/login" className="font-medium text-indigo-600 hover:text-indigo-500">
               Giriş sayfasına dön
             </Link>
           </div>
@@ -74,4 +69,4 @@ export default function ForgotPasswordPage() {
       </div>
     </div>
   );
-} 
+}

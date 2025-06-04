@@ -14,7 +14,7 @@ export default function PostList({ posts }: Props) {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Bu yazıyı silmek istediğinizden emin misiniz?')) return;
-    
+
     setIsDeleting(id);
     try {
       await deletePost(id);
@@ -46,16 +46,20 @@ export default function PostList({ posts }: Props) {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {posts.map((post) => (
+          {posts.map(post => (
             <tr key={post.id}>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-medium text-gray-900">{post.title}</div>
                 <div className="text-sm text-gray-500">{post.slug}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                  post.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                }`}>
+                <span
+                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    post.status === 'published'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-yellow-100 text-yellow-800'
+                  }`}
+                >
                   {post.status === 'published' ? 'Yayında' : 'Taslak'}
                 </span>
               </td>
@@ -83,4 +87,4 @@ export default function PostList({ posts }: Props) {
       </table>
     </div>
   );
-} 
+}

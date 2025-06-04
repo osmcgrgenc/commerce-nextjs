@@ -5,4 +5,4 @@ const nhost = new NhostClient({
   region: process.env.NEXT_PUBLIC_NHOST_REGION || '',
 });
 
-export default nhost; 
+export default nhost;

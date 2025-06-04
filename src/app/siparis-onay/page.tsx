@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { CheckCircle2 } from 'lucide-react'
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { CheckCircle2 } from 'lucide-react';
 
 export default function OrderConfirmationPage() {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     // Sayfa yenilendiğinde ana sayfaya yönlendir
     const handleBeforeUnload = () => {
-      router.push('/')
-    }
+      router.push('/');
+    };
 
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [router])
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [router]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -26,7 +26,8 @@ export default function OrderConfirmationPage() {
           Siparişiniz Alındı!
         </h1>
         <p className="mt-4 text-base text-gray-500">
-          Siparişiniz başarıyla oluşturuldu. Sipariş detaylarınız e-posta adresinize gönderilecektir.
+          Siparişiniz başarıyla oluşturuldu. Sipariş detaylarınız e-posta adresinize
+          gönderilecektir.
         </p>
         <div className="mt-8 space-y-4">
           <div className="rounded-lg bg-gray-50 p-6">
@@ -68,5 +69,5 @@ export default function OrderConfirmationPage() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

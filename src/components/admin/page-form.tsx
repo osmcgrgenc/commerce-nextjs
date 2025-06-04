@@ -1,9 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { getPageBySlug } from "@/lib/nhost/queries";
-import { createPage, updatePage } from "@/lib/nhost/mutations";
-import RichTextEditor from "./rich-text-editor";
+'use client';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getPageBySlug } from '@/lib/nhost/queries';
+import { createPage, updatePage } from '@/lib/nhost/mutations';
+import RichTextEditor from './rich-text-editor';
 
 type PageFormProps = {
   pageId?: string;
@@ -15,7 +15,7 @@ type PageData = {
   content: string;
   meta_title: string;
   meta_description: string;
-  status: "draft" | "published";
+  status: 'draft' | 'published';
 };
 
 export default function PageForm({ pageId }: PageFormProps) {
@@ -23,12 +23,12 @@ export default function PageForm({ pageId }: PageFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<PageData>({
-    title: "",
-    slug: "",
-    content: "",
-    meta_title: "",
-    meta_description: "",
-    status: "draft",
+    title: '',
+    slug: '',
+    content: '',
+    meta_title: '',
+    meta_description: '',
+    status: 'draft',
   });
 
   useEffect(() => {
@@ -46,13 +46,13 @@ export default function PageForm({ pageId }: PageFormProps) {
           title: page.title,
           slug: page.slug,
           content: page.content,
-          meta_title: page.meta_title || "",
-          meta_description: page.meta_description || "",
+          meta_title: page.meta_title || '',
+          meta_description: page.meta_description || '',
           status: page.status,
         });
       }
     } catch {
-      setError("Sayfa yüklenirken bir hata oluştu.");
+      setError('Sayfa yüklenirken bir hata oluştu.');
     } finally {
       setIsLoading(false);
     }
@@ -70,10 +70,10 @@ export default function PageForm({ pageId }: PageFormProps) {
         await createPage(formData);
       }
 
-      router.push("/admin/pages");
+      router.push('/admin/pages');
       router.refresh();
     } catch {
-      setError("Sayfa kaydedilirken bir hata oluştu.");
+      setError('Sayfa kaydedilirken bir hata oluştu.');
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +83,7 @@ export default function PageForm({ pageId }: PageFormProps) {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   if (isLoading) {
@@ -92,15 +92,10 @@ export default function PageForm({ pageId }: PageFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 text-red-500 p-4 rounded-lg">{error}</div>
-      )}
+      {error && <div className="bg-red-50 text-red-500 p-4 rounded-lg">{error}</div>}
 
       <div>
-        <label
-          htmlFor="title"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
           Başlık
         </label>
         <input
@@ -115,10 +110,7 @@ export default function PageForm({ pageId }: PageFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="slug"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
           Slug
         </label>
         <input
@@ -133,27 +125,19 @@ export default function PageForm({ pageId }: PageFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="content"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="content" className="block text-sm font-medium text-gray-700">
           İçerik
         </label>
         <div className="mt-1">
           <RichTextEditor
             content={formData.content}
-            onChange={(content) =>
-              setFormData((prev) => ({ ...prev, content }))
-            }
+            onChange={content => setFormData(prev => ({ ...prev, content }))}
           />
         </div>
       </div>
 
       <div>
-        <label
-          htmlFor="meta_title"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="meta_title" className="block text-sm font-medium text-gray-700">
           Meta Başlık
         </label>
         <input
@@ -167,10 +151,7 @@ export default function PageForm({ pageId }: PageFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="meta_description"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="meta_description" className="block text-sm font-medium text-gray-700">
           Meta Açıklama
         </label>
         <textarea
@@ -184,10 +165,7 @@ export default function PageForm({ pageId }: PageFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="status"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="status" className="block text-sm font-medium text-gray-700">
           Durum
         </label>
         <select
@@ -215,9 +193,9 @@ export default function PageForm({ pageId }: PageFormProps) {
           disabled={isLoading}
           className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          {isLoading ? "Kaydediliyor..." : "Kaydet"}
+          {isLoading ? 'Kaydediliyor...' : 'Kaydet'}
         </button>
       </div>
     </form>
   );
-} 
+}
