@@ -198,30 +198,35 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ products: Product[] }>>(
-    `
-    query GetProductBySlug($slug: String!) {
-      products(where: {slug: {_eq: $slug}}) {
-        id
-        name
-        slug
-        description
-        price
-        stock
-        images
-        categories
-        tags
-        status
-        created_at
-        updated_at
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      query GetProductBySlug($slug: String!) {
+        products(where: { slug: { _eq: $slug } }) {
+          id
+          name
+          slug
+          description
+          price
+          images
+          category {
+            id
+            name
+            slug
+          }
+          created_at
+          updated_at
+        }
       }
-    }
-    `,
-    { slug }
-  );
+    `, {
+      slug,
+    });
 
-  if (error) throw error;
-  return data.data.products?.[0] || null;
+    if (error) throw error;
+    return data.products[0] || null;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
 }
 
 export async function getOrders(): Promise<Order[]> {
@@ -436,4 +441,187 @@ export async function getCustomerStats() {
     totalCustomers: customers.length,
     newCustomers: newCustomers.length,
   };
+}
+
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      query GetCategoryBySlug($slug: String!) {
+        categories(where: { slug: { _eq: $slug } }) {
+          id
+          name
+          slug
+          description
+          created_at
+          updated_at
+        }
+      }
+    `, {
+      slug,
+    });
+
+    if (error) throw error;
+    return data.categories[0] || null;
+  } catch (error) {
+    console.error('Error fetching category:', error);
+    return null;
+  }
+}
+
+export async function getOrderById(id: string): Promise<Order | null> {
+  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ orders: Order[] }>>(
+    `
+    query GetOrderById($id: uuid!) {
+      orders(where: {id: {_eq: $id}}) {
+        id
+        customer_id
+        status
+        total
+        items {
+          id
+          product_id
+          quantity
+          price
+          product {
+            name
+            slug
+            image
+          }
+        }
+        shipping_address {
+          full_name
+          address_line1
+          address_line2
+          city
+          state
+          postal_code
+          country
+          phone
+        }
+        billing_address {
+          full_name
+          address_line1
+          address_line2
+          city
+          state
+          postal_code
+          country
+          phone
+        }
+        payment_status
+        created_at
+        updated_at
+      }
+    }
+    `,
+    { id }
+  );
+
+  if (error) throw error;
+  return data.data.orders?.[0] || null;
+}
+
+export async function getCustomerById(id: string): Promise<Customer | null> {
+  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ customers: Customer[] }>>(
+    `
+    query GetCustomerById($id: uuid!) {
+      customers(where: {id: {_eq: $id}}) {
+        id
+        email
+        display_name
+        phone_number
+        addresses {
+          full_name
+          address_line1
+          address_line2
+          city
+          state
+          postal_code
+          country
+          phone
+        }
+        created_at
+        updated_at
+      }
+    }
+    `,
+    { id }
+  );
+
+  if (error) throw error;
+  return data.data.customers?.[0] || null;
+}
+
+export async function getRelatedProducts(slug: string): Promise<Product[]> {
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      query GetRelatedProducts($slug: String!) {
+        products(
+          where: { 
+            _and: [
+              { slug: { _neq: $slug } },
+              { category: { products: { slug: { _eq: $slug } } } }
+            ]
+          },
+          limit: 4
+        ) {
+          id
+          name
+          slug
+          description
+          price
+          images
+          category {
+            id
+            name
+            slug
+          }
+          created_at
+          updated_at
+        }
+      }
+    `, {
+      slug,
+    });
+
+    if (error) throw error;
+    return data.products;
+  } catch (error) {
+    console.error('Error fetching related products:', error);
+    return [];
+  }
+}
+
+export async function getCategoryProducts(slug: string): Promise<Product[]> {
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      query GetCategoryProducts($slug: String!) {
+        products(
+          where: { category: { slug: { _eq: $slug } } }
+        ) {
+          id
+          name
+          slug
+          description
+          price
+          images
+          category {
+            id
+            name
+            slug
+          }
+          created_at
+          updated_at
+        }
+      }
+    `, {
+      slug,
+    });
+
+    if (error) throw error;
+    return data.products;
+  } catch (error) {
+    console.error('Error fetching category products:', error);
+    return [];
+  }
 }

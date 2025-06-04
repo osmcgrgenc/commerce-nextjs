@@ -1,30 +1,31 @@
-import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Toaster } from 'sonner';
-import { Analytics } from '@vercel/analytics/react';
-import { GoogleAnalytics } from '@next/third-parties/google';
-import { Providers } from './providers';
 import './globals.css';
+import { NhostProvider } from '@/components/providers/nhost-provider';
+import { QueryProvider } from '@/components/providers/query-provider';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Liman Design',
-  description: 'Modern mobilya ve dekorasyon ürünleri',
+  description: 'Modern ve şık mobilya tasarımları',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="tr" suppressHydrationWarning>
-      <head>
-        <GoogleAnalytics gaId="G-XXXXXXXXXX" />
-      </head>
+    <html lang="tr">
       <body className={inter.className}>
-        <Providers>
-          {children}
-          <Toaster />
-          <Analytics />
-        </Providers>
+        <QueryProvider>
+          <NhostProvider>
+            {children}
+            <Toaster />
+          </NhostProvider>
+        </QueryProvider>
       </body>
     </html>
   );

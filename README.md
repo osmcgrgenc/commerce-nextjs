@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Liman Design - Modern Mobilya E-ticaret Projesi
 
-## Getting Started
+Bu proje, modern ve şık mobilya tasarımlarını sergileyen bir e-ticaret web uygulamasıdır. Next.js 14, TypeScript, Tailwind CSS ve modern web teknolojileri kullanılarak geliştirilmiştir.
 
-First, run the development server:
+## 🚀 Özellikler
 
+### Tamamlanan Özellikler
+- ✅ Modern ve responsive tasarım
+- ✅ Ürün listeleme ve detay sayfaları
+- ✅ Kategori listeleme ve detay sayfaları
+- ✅ Blog sistemi
+- ✅ İletişim formu
+- ✅ SEO optimizasyonu
+- ✅ Performans optimizasyonları
+- ✅ Resim optimizasyonları
+- ✅ React Query ile veri yönetimi
+- ✅ Zustand ile state yönetimi
+- ✅ TypeScript ile tip güvenliği
+- ✅ Tailwind CSS ile stil yönetimi
+
+### Yapılacaklar
+- [ ] Kullanıcı kimlik doğrulama sistemi
+- [ ] Sepet yönetimi
+- [ ] Ödeme sistemi entegrasyonu
+- [ ] Admin paneli
+- [ ] Ürün arama ve filtreleme
+- [ ] Ürün sıralama
+- [ ] Sayfalama (pagination)
+- [ ] Çoklu dil desteği
+- [ ] Dark mode
+- [ ] Unit testler
+- [ ] E2E testler
+- [ ] API dokümantasyonu
+- [ ] Performans testleri
+- [ ] Güvenlik testleri
+
+## 🛠️ Teknolojiler
+
+- **Framework:** Next.js 14
+- **Dil:** TypeScript
+- **Stil:** Tailwind CSS
+- **State Yönetimi:** 
+  - React Query (Server State)
+  - Zustand (Client State)
+- **Form Yönetimi:** React Hook Form
+- **Validasyon:** Zod
+- **UI Bileşenleri:** Shadcn UI
+- **Veritabanı:** NHost
+- **Deployment:** Vercel
+
+## 📦 Kurulum
+
+1. Projeyi klonlayın:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/kullanici/limandesign-nextjs.git
+cd limandesign-nextjs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Bağımlılıkları yükleyin:
+```bash
+npm install
+# veya
+yarn install
+# veya
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Geliştirme sunucusunu başlatın:
+```bash
+npm run dev
+# veya
+yarn dev
+# veya
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açın.
 
-## Learn More
+## 🔧 Ortam Değişkenleri
 
-To learn more about Next.js, take a look at the following resources:
+Projeyi çalıştırmak için aşağıdaki ortam değişkenlerini `.env.local` dosyasında tanımlamanız gerekiyor:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_NHOST_URL=your_nhost_url
+NEXT_PUBLIC_NHOST_ANON_KEY=your_nhost_anon_key
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Proje Yapısı
 
-## Deploy on Vercel
+```
+src/
+├── app/                 # App Router sayfaları
+├── components/         # React bileşenleri
+│   ├── ui/            # Temel UI bileşenleri
+│   ├── layout/        # Layout bileşenleri
+│   └── features/      # Özellik bazlı bileşenler
+├── hooks/             # Custom React hooks
+├── lib/               # Yardımcı fonksiyonlar ve API
+├── store/             # Zustand store'ları
+├── types/             # TypeScript tip tanımlamaları
+└── styles/            # Global stiller
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧪 Test
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Unit testleri çalıştır
+npm run test
+
+# E2E testleri çalıştır
+npm run test:e2e
+```
+
+## 📝 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+
+## 👥 Katkıda Bulunma
+
+1. Bu depoyu fork edin
+2. Feature branch'i oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'feat: Add some amazing feature'`)
+4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
+
+## 📞 İletişim
+
+Proje Sahibi - [@limandesign](https://twitter.com/limandesign)
+
+Proje Linki: [https://github.com/kullanici/limandesign-nextjs](https://github.com/kullanici/limandesign-nextjs)

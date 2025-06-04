@@ -567,3 +567,133 @@ export async function updateSettings(settings: Partial<Settings>): Promise<Setti
   if (!data.data.update_settings_by_pk) throw new Error('Site ayarları güncellenemedi');
   return data.data.update_settings_by_pk;
 }
+
+export async function createOrder(
+  order: Omit<Order, 'id' | 'created_at' | 'updated_at'>
+): Promise<Order> {
+  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ insert_orders_one: Order }>>(
+    `
+    mutation CreateOrder($order: orders_insert_input!) {
+      insert_orders_one(object: $order) {
+        id
+        customer_id
+        status
+        total
+        items {
+          id
+          product_id
+          quantity
+          price
+          product {
+            name
+            slug
+            image
+          }
+        }
+        shipping_address {
+          full_name
+          address_line1
+          address_line2
+          city
+          state
+          postal_code
+          country
+          phone
+        }
+        billing_address {
+          full_name
+          address_line1
+          address_line2
+          city
+          state
+          postal_code
+          country
+          phone
+        }
+        payment_status
+        created_at
+        updated_at
+      }
+    }
+    `,
+    { order }
+  );
+
+  if (error) throw error;
+  if (!data.data.insert_orders_one) throw new Error('Sipariş oluşturulamadı');
+  return data.data.insert_orders_one;
+}
+
+export async function deleteOrder(id: string): Promise<string> {
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_orders_by_pk: { id: string } }>
+  >(
+    `
+    mutation DeleteOrder($id: uuid!) {
+      delete_orders_by_pk(id: $id) {
+        id
+      }
+    }
+    `,
+    { id }
+  );
+
+  if (error) throw error;
+  if (!data.data.delete_orders_by_pk) throw new Error('Sipariş silinemedi');
+  return data.data.delete_orders_by_pk.id;
+}
+
+export async function createCustomer(
+  customer: Omit<Customer, 'id' | 'created_at' | 'updated_at'>
+): Promise<Customer> {
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ insert_customers_one: Customer }>
+  >(
+    `
+    mutation CreateCustomer($customer: customers_insert_input!) {
+      insert_customers_one(object: $customer) {
+        id
+        email
+        display_name
+        phone_number
+        addresses {
+          full_name
+          address_line1
+          address_line2
+          city
+          state
+          postal_code
+          country
+          phone
+        }
+        created_at
+        updated_at
+      }
+    }
+    `,
+    { customer }
+  );
+
+  if (error) throw error;
+  if (!data.data.insert_customers_one) throw new Error('Müşteri oluşturulamadı');
+  return data.data.insert_customers_one;
+}
+
+export async function deleteCustomer(id: string): Promise<string> {
+  const { data, error } = await nhost.graphql.request<
+    GraphQLResponse<{ delete_customers_by_pk: { id: string } }>
+  >(
+    `
+    mutation DeleteCustomer($id: uuid!) {
+      delete_customers_by_pk(id: $id) {
+        id
+      }
+    }
+    `,
+    { id }
+  );
+
+  if (error) throw error;
+  if (!data.data.delete_customers_by_pk) throw new Error('Müşteri silinemedi');
+  return data.data.delete_customers_by_pk.id;
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import { NhostClient } from '@nhost/nextjs';
 
 const nhost = new NhostClient({

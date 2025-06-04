@@ -1,4 +1,7 @@
-import nhost from '@/lib/nhost/client';
+'use client';
+
+import nhost from './nhost/client';
+import { Product, Category, Post, Contact } from '@/types';
 import { cache } from 'react';
 
 export type Category = {
@@ -452,3 +455,96 @@ export const getAboutData = cache(async () => {
     teamMembers: data.team_members,
   };
 });
+
+export async function getProducts(): Promise<Product[]> {
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      query GetProducts {
+        products {
+          id
+          name
+          slug
+          description
+          price
+          images
+          category {
+            id
+            name
+            slug
+          }
+          created_at
+          updated_at
+        }
+      }
+    `);
+
+    if (error) throw error;
+    return data.products;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+}
+
+export async function getPosts(): Promise<Post[]> {
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      query GetPosts {
+        posts {
+          id
+          title
+          slug
+          description
+          content
+          image
+          category {
+            id
+            name
+            slug
+          }
+          author {
+            id
+            name
+            email
+            image
+            bio
+          }
+          created_at
+          updated_at
+        }
+      }
+    `);
+
+    if (error) throw error;
+    return data.posts;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
+  }
+}
+
+export async function createContact(contact: Omit<Contact, 'id' | 'created_at' | 'updated_at'>): Promise<Contact | null> {
+  try {
+    const { data, error } = await nhost.graphql.request(`
+      mutation CreateContact($contact: contacts_insert_input!) {
+        insert_contacts_one(object: $contact) {
+          id
+          name
+          email
+          phone
+          message
+          created_at
+          updated_at
+        }
+      }
+    `, {
+      contact,
+    });
+
+    if (error) throw error;
+    return data.insert_contacts_one;
+  } catch (error) {
+    console.error('Error creating contact:', error);
+    return null;
+  }
+}

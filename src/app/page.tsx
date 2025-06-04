@@ -1,100 +1,127 @@
-import { Suspense } from 'react';
+'use client';
+
+import { useProducts } from '@/hooks/use-products';
+import { useCategories } from '@/hooks/use-categories';
+import { usePosts } from '@/hooks/use-posts';
 import { ProductCard } from '@/components/products/product-card';
-import { CategoryCard } from '@/components/category-card';
-import { HeroSlider } from '@/components/hero-slider';
-import { getCategories, getFeaturedProducts, getBanners } from '@/lib/api';
-import { generateMetadata } from '@/lib/metadata';
-import Image from 'next/image';
+import { CategoryCard } from '@/components/categories/category-card';
+import { PostCard } from '@/components/blog/post-card';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-export const metadata = generateMetadata({
-  title: 'Liman Design - Modern Mobilya ve Dekorasyon',
-  description:
-    'Liman Design ile evinize modern ve şık mobilyalar, dekorasyon ürünleri ve aksesuarlar ekleyin. Kaliteli ürünler, uygun fiyatlar ve hızlı teslimat.',
-  image: '/images/home-og.jpg',
-});
+export default function HomePage() {
+  const { data: products } = useProducts();
+  const { data: categories } = useCategories();
+  const { data: posts } = usePosts();
 
-// Yükleme durumu için bileşenler
-function CategoriesSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      {[...Array(4)].map((_, i) => (
-        <div key={i} className="animate-pulse">
-          <div className="aspect-square rounded-lg bg-gray-200" />
-          <div className="mt-4 h-4 w-3/4 rounded bg-gray-200" />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ProductsSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      {[...Array(4)].map((_, i) => (
-        <div key={i} className="animate-pulse">
-          <div className="aspect-square rounded-lg bg-gray-200" />
-          <div className="mt-4 space-y-2">
-            <div className="h-4 w-3/4 rounded bg-gray-200" />
-            <div className="h-4 w-1/2 rounded bg-gray-200" />
+    <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Hero Section */}
+      <div className="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:mx-0">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+              Modern ve Şık Mobilya Tasarımları
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-300">
+              Eviniz için en kaliteli ve şık mobilyaları keşfedin. Modern tasarımlar ve
+              konforlu yaşam alanları için doğru adres.
+            </p>
+            <div className="mt-10 flex items-center gap-x-6">
+              <Button asChild>
+                <Link href="/urunler">
+                  Ürünleri Keşfet
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="ghost" asChild>
+                <Link href="/iletisim">İletişime Geç</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-}
-
-// Kategoriler bölümü
-async function CategoriesSection() {
-  const categories = await getCategories();
-
-  return (
-    <section className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold">Kategoriler</h2>
-      <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {categories.map(category => (
-          <CategoryCard key={category.id} category={category} />
-        ))}
       </div>
-    </section>
-  );
-}
 
-// Öne çıkan ürünler bölümü
-async function FeaturedProductsSection() {
-  const products = await getFeaturedProducts();
-
-  return (
-    <section className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold">Öne Çıkan Ürünler</h2>
-      <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-        {products.map(product => (
-          <ProductCard
-            key={product.id}
-            {...product}
-            priority={product.id <= 4} // İlk 4 ürün için priority true
-          />
-        ))}
+      {/* Featured Products */}
+      <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            Öne Çıkan Ürünler
+          </h2>
+          <Button variant="ghost" asChild>
+            <Link href="/urunler">
+              Tümünü Gör
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {products?.slice(0, 4).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
       </div>
-    </section>
-  );
-}
 
-// Ana sayfa bileşeni
-export default async function HomePage() {
-  const banners = await getBanners();
+      {/* Categories */}
+      <div className="mx-auto mt-16 max-w-2xl lg:mx-0 lg:max-w-none">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            Kategoriler
+          </h2>
+          <Button variant="ghost" asChild>
+            <Link href="/kategoriler">
+              Tümünü Gör
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {categories?.map((category) => (
+            <CategoryCard key={category.id} category={category} />
+          ))}
+        </div>
+      </div>
 
-  return (
-    <main>
-      <HeroSlider banners={banners} />
-      <div className="space-y-16 py-8">
-        <Suspense fallback={<CategoriesSkeleton />}>
-          <CategoriesSection />
-        </Suspense>
+      {/* Blog Posts */}
+      <div className="mx-auto mt-16 max-w-2xl lg:mx-0 lg:max-w-none">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            Blog Yazıları
+          </h2>
+          <Button variant="ghost" asChild>
+            <Link href="/blog">
+              Tümünü Gör
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {posts?.slice(0, 3).map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      </div>
 
-        <Suspense fallback={<ProductsSkeleton />}>
-          <FeaturedProductsSection />
-        </Suspense>
+      {/* Contact Section */}
+      <div className="mx-auto mt-16 max-w-2xl lg:mx-0 lg:max-w-none">
+        <div className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
+          <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Bizimle İletişime Geçin
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
+            Modern ve şık mobilyalar için doğru adres. Size en uygun çözümü sunmak için
+            buradayız.
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <Button asChild>
+              <Link href="/iletisim">İletişime Geç</Link>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link href="/hakkimizda">Hakkımızda</Link>
+            </Button>
+          </div>
+        </div>
       </div>
     </main>
   );
