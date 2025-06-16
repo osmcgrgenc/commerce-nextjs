@@ -1,6 +1,6 @@
 # Liman Design - Modern Mobilya E-ticaret Projesi
 
-Bu proje, modern ve şık mobilya tasarımlarını sergileyen bir e-ticaret web uygulamasıdır. Next.js 14, TypeScript, Tailwind CSS ve modern web teknolojileri kullanılarak geliştirilmiştir.
+Bu proje, modern ve şık mobilya tasarımlarını sergileyen bir e-ticaret web uygulamasıdır. Next.js 15, TypeScript, Tailwind CSS ve modern web teknolojileri kullanılarak geliştirilmiştir.
 
 ## 🚀 Özellikler
 
@@ -36,7 +36,7 @@ Bu proje, modern ve şık mobilya tasarımlarını sergileyen bir e-ticaret web 
 
 ## 🛠️ Teknolojiler
 
-- **Framework:** Next.js 14
+- **Framework:** Next.js 15
 - **Dil:** TypeScript
 - **Stil:** Tailwind CSS
 - **State Yönetimi:** 
