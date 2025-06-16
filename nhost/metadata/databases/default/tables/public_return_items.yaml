@@ -1,0 +1,3 @@
+table:
+  name: return_items
+  schema: public

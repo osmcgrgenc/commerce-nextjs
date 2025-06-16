@@ -12,6 +12,40 @@ import {
   Settings,
 } from './types';
 
+interface NhostProduct {
+  id: string;
+  name: string;
+  price: number;
+  discount_price?: number;
+  slug: string;
+  description: string;
+  stock_quantity: number;
+  created_at: string;
+  updated_at: string;
+  images: Array<{
+    image_url: string;
+    is_primary: boolean;
+  }>;
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+interface NhostCategory {
+  id: string;
+  name: string;
+  image_url: string;
+  description: string;
+  slug: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export async function getPages(): Promise<Page[]> {
   const { data, error } = await nhost.graphql.request<GraphQLResponse<{ pages: Page[] }>>(
     `
@@ -138,20 +172,30 @@ export async function getComments(postId: string): Promise<Comment[]> {
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ categories: Category[] }>>(
-    `
+  const { data, error } = await nhost.graphql.request<{ categories: NhostCategory[] }>(`
     query GetCategories {
-      categories(order_by: {name: asc}) {
+      categories {
         id
         name
+        image_url
+        description
         slug
+        created_at
+        updated_at
       }
     }
-    `
-  );
+  `);
 
   if (error) throw error;
-  return data.data.categories || [];
+
+  return data.categories.map((category: NhostCategory) => ({
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    description: category.description,
+    created_at: category.created_at,
+    updated_at: category.updated_at
+  }));
 }
 
 export async function getTags(): Promise<Tag[]> {
@@ -172,61 +216,107 @@ export async function getTags(): Promise<Tag[]> {
 }
 
 export async function getProducts(): Promise<Product[]> {
-  const { data, error } = await nhost.graphql.request<GraphQLResponse<{ products: Product[] }>>(
-    `
+  const { data, error } = await nhost.graphql.request<{ products: NhostProduct[] }>(`
     query GetProducts {
-      products(order_by: {created_at: desc}) {
+      products {
         id
         name
+        price
         slug
         description
-        price
-        stock
-        images
-        categories
-        tags
-        status
-        created_at
-        updated_at
-      }
-    }
-    `
-  );
-
-  if (error) throw error;
-  return data.data.products || [];
-}
-
-export async function getProductBySlug(slug: string): Promise<Product | null> {
-  try {
-    const { data, error } = await nhost.graphql.request(`
-      query GetProductBySlug($slug: String!) {
-        products(where: { slug: { _eq: $slug } }) {
+        images {
+          image_url
+          is_primary
+        }
+        category {
           id
           name
           slug
           description
-          price
-          images
-          category {
-            id
-            name
-            slug
-          }
           created_at
           updated_at
         }
+        stock_quantity
+        created_at
+        updated_at
       }
-    `, {
-      slug,
-    });
+    }
+  `);
 
-    if (error) throw error;
-    return data.products[0] || null;
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    return null;
-  }
+  if (error) throw error;
+
+  return data.products.map((product: NhostProduct) => ({
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    description: product.description,
+    price: product.price,
+    images: product.images.map(img => img.image_url),
+    category: {
+      id: product.category.id,
+      name: product.category.name,
+      slug: product.category.slug,
+      description: product.category.description,
+      created_at: product.category.created_at,
+      updated_at: product.category.updated_at
+    },
+    stock_quantity: product.stock_quantity,
+    created_at: product.created_at,
+    updated_at: product.updated_at
+  }));
+}
+
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  const { data, error } = await nhost.graphql.request<{ products: NhostProduct[] }>(`
+    query GetProductBySlug($slug: String!) {
+      products(where: {slug: {_eq: $slug}}) {
+        id
+        name
+        price
+        slug
+        description
+        images {
+          image_url
+          is_primary
+        }
+        category {
+          id
+          name
+          slug
+          description
+          created_at
+          updated_at
+        }
+        stock_quantity
+        created_at
+        updated_at
+      }
+    }
+  `, { slug });
+
+  if (error) throw error;
+  if (!data.products[0]) return null;
+
+  const product = data.products[0];
+  return {
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    description: product.description,
+    price: product.price,
+    images: product.images.map(img => img.image_url),
+    category: {
+      id: product.category.id,
+      name: product.category.name,
+      slug: product.category.slug,
+      description: product.category.description,
+      created_at: product.category.created_at,
+      updated_at: product.category.updated_at
+    },
+    stock_quantity: product.stock_quantity,
+    created_at: product.created_at,
+    updated_at: product.updated_at
+  };
 }
 
 export async function getOrders(): Promise<Order[]> {

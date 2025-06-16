@@ -1,0 +1,3 @@
+table:
+  name: return_requests
+  schema: public

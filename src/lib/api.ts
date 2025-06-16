@@ -4,26 +4,6 @@ import nhost from './nhost/client';
 import { Product, Category, Post, Contact } from '@/types';
 import { cache } from 'react';
 
-export type Category = {
-  id: string;
-  name: string;
-  image: string;
-  href: string;
-  description: string;
-};
-
-export type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  href: string;
-  category: string;
-  arrivalDate?: string;
-  stock: number;
-  isNew?: boolean;
-};
-
 export type Banner = {
   id: string;
   title: string;
@@ -41,6 +21,8 @@ interface NhostCategory {
   image_url: string;
   description: string;
   slug: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface NhostProduct {
@@ -49,15 +31,21 @@ interface NhostProduct {
   price: number;
   discount_price?: number;
   slug: string;
+  description: string;
   stock_quantity: number;
   created_at: string;
+  updated_at: string;
   images: Array<{
     image_url: string;
     is_primary: boolean;
   }>;
   category: {
+    id: string;
     name: string;
     slug: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
   };
 }
 
@@ -82,18 +70,29 @@ export const getCategories = cache(async (): Promise<Category[]> => {
         image_url
         description
         slug
+        created_at
+        updated_at
       }
     }
   `);
 
-  if (error) throw error;
+  if (error) {
+    console.error('Kategoriler getirilirken hata oluştu:', error);
+    throw new Error('Kategoriler getirilemedi');
+  }
+
+  if (!data?.categories) {
+    console.error('Kategoriler bulunamadı');
+    return [];
+  }
 
   return data.categories.map((category: NhostCategory) => ({
     id: category.id,
     name: category.name,
-    image: category.image_url,
-    href: `/kategoriler/${category.slug}`,
-    description: category.description,
+    slug: category.slug,
+    description: category.description || '',
+    created_at: category.created_at,
+    updated_at: category.updated_at
   }));
 });
 
@@ -105,15 +104,23 @@ export const getFeaturedProducts = cache(async (): Promise<Product[]> => {
         id
         name
         price
-        images(where: {is_primary: {_eq: true}}) {
+        slug
+        description
+        images {
           image_url
+          is_primary
         }
         category {
+          id
           name
           slug
+          description
+          created_at
+          updated_at
         }
         stock_quantity
-        slug
+        created_at
+        updated_at
       }
     }
   `);
@@ -123,11 +130,13 @@ export const getFeaturedProducts = cache(async (): Promise<Product[]> => {
   return data.products.map((product: NhostProduct) => ({
     id: product.id,
     name: product.name,
+    slug: product.slug,
+    description: product.description,
     price: product.price,
-    image: product.images[0]?.image_url || '/images/placeholder.jpg',
-    href: `/urunler/${product.slug}`,
-    category: product.category.name,
-    stock: product.stock_quantity,
+    images: product.images.map(img => img.image_url),
+    category: product.category,
+    created_at: product.created_at,
+    updated_at: product.updated_at
   }));
 });
 
@@ -170,15 +179,23 @@ export const getNewArrivals = cache(async (): Promise<Product[]> => {
         id
         name
         price
-        images(where: {is_primary: {_eq: true}}) {
+        slug
+        description
+        images {
           image_url
+          is_primary
         }
         category {
+          id
           name
+          slug
+          description
+          created_at
+          updated_at
         }
         stock_quantity
         created_at
-        slug
+        updated_at
       }
     }
   `);
@@ -188,118 +205,107 @@ export const getNewArrivals = cache(async (): Promise<Product[]> => {
   return data.products.map((product: NhostProduct) => ({
     id: product.id,
     name: product.name,
+    slug: product.slug,
+    description: product.description,
     price: product.price,
-    image: product.images[0]?.image_url || '/images/placeholder.jpg',
-    href: `/urunler/${product.slug}`,
-    category: product.category.name,
-    stock: product.stock_quantity,
-    isNew: true,
-    arrivalDate: product.created_at,
+    images: product.images.map(img => img.image_url),
+    category: product.category,
+    created_at: product.created_at,
+    updated_at: product.updated_at
   }));
 });
 
 // Kategori detaylarını getir
-export const getCategoryDetails = cache(
-  async (
-    slug: string
-  ): Promise<{
-    category: Category;
-    products: Product[];
-  }> => {
-    const { data, error } = await nhost.graphql.request<{
-      categories: NhostCategory[];
-      products: NhostProduct[];
-    }>(
-      `
+export const getCategoryDetails = cache(async (slug: string): Promise<{ category: Category; products: Product[] }> => {
+  const { data, error } = await nhost.graphql.request<{ categories: NhostCategory[]; products: NhostProduct[] }>(`
     query GetCategoryDetails($slug: String!) {
       categories(where: {slug: {_eq: $slug}}) {
         id
         name
-        image_url
-        description
         slug
+        description
+        created_at
+        updated_at
       }
       products(where: {category: {slug: {_eq: $slug}}}) {
         id
         name
         price
-        discount_price
-        images(where: {is_primary: {_eq: true}}) {
-          image_url
-        }
-        category {
-          name
-          slug
-        }
-        stock_quantity
         slug
-        created_at
-      }
-    }
-  `,
-      { slug }
-    );
-
-    if (error) throw error;
-    if (!data.categories[0]) throw new Error('Kategori bulunamadı');
-
-    const category = data.categories[0];
-    return {
-      category: {
-        id: category.id,
-        name: category.name,
-        image: category.image_url,
-        href: `/kategoriler/${category.slug}`,
-        description: category.description,
-      },
-      products: data.products.map((product: NhostProduct) => ({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.images[0]?.image_url || '/images/placeholder.jpg',
-        href: `/urunler/${product.slug}`,
-        category: product.category.name,
-        stock: product.stock_quantity,
-        isNew: new Date(product.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000,
-      })),
-    };
-  }
-);
-
-// Ürün detaylarını getir
-export const getProductDetails = cache(async (slug: string): Promise<Product> => {
-  const { data, error } = await nhost.graphql.request<{ products: NhostProduct[] }>(
-    `
-    query GetProductDetails($slug: String!) {
-      products(where: {slug: {_eq: $slug}}) {
-        id
-        name
-        price
-        discount_price
         description
         images {
           image_url
           is_primary
         }
         category {
-          name
-          slug
-        }
-        stock_quantity
-        slug
-        created_at
-        specifications
-        variants {
           id
           name
-          price_adjustment
-          stock_quantity
+          slug
+          description
+          created_at
+          updated_at
         }
+        stock_quantity
+        created_at
+        updated_at
       }
     }
-  `,
-    { slug }
-  );
+  `, { slug });
+
+  if (error) throw error;
+  if (!data.categories[0]) throw new Error('Kategori bulunamadı');
+
+  return {
+    category: {
+      id: data.categories[0].id,
+      name: data.categories[0].name,
+      slug: data.categories[0].slug,
+      description: data.categories[0].description,
+      created_at: data.categories[0].created_at,
+      updated_at: data.categories[0].updated_at
+    },
+    products: data.products.map((product: NhostProduct) => ({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      description: product.description,
+      price: product.price,
+      images: product.images.map(img => img.image_url),
+      category: product.category,
+      created_at: product.created_at,
+      updated_at: product.updated_at
+    }))
+  };
+});
+
+// Ürün detaylarını getir
+export const getProductDetails = cache(async (slug: string): Promise<Product> => {
+  const { data, error } = await nhost.graphql.request<{ products: NhostProduct[] }>(`
+    query GetProductDetails($slug: String!) {
+      products(where: {slug: {_eq: $slug}}) {
+        id
+        name
+        price
+        slug
+        description
+        images {
+          image_url
+          is_primary
+        }
+        category {
+          id
+          name
+          slug
+          description
+          created_at
+          updated_at
+        }
+        stock_quantity
+        created_at
+        updated_at
+      }
+    }
+  `, { slug });
 
   if (error) throw error;
   if (!data.products[0]) throw new Error('Ürün bulunamadı');
@@ -308,22 +314,19 @@ export const getProductDetails = cache(async (slug: string): Promise<Product> =>
   return {
     id: product.id,
     name: product.name,
+    slug: product.slug,
+    description: product.description,
     price: product.price,
-    image:
-      product.images.find(img => img.is_primary)?.image_url ||
-      product.images[0]?.image_url ||
-      '/images/placeholder.jpg',
-    href: `/urunler/${product.slug}`,
-    category: product.category.name,
-    stock: product.stock_quantity,
-    isNew: new Date(product.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000,
+    images: product.images.map(img => img.image_url),
+    category: product.category,
+    created_at: product.created_at,
+    updated_at: product.updated_at
   };
 });
 
 // Arama sonuçlarını getir
 export const searchProducts = cache(async (query: string): Promise<Product[]> => {
-  const { data, error } = await nhost.graphql.request<{ products: NhostProduct[] }>(
-    `
+  const { data, error } = await nhost.graphql.request<{ products: NhostProduct[] }>(`
     query SearchProducts($query: String!) {
       products(
         where: {
@@ -336,33 +339,39 @@ export const searchProducts = cache(async (query: string): Promise<Product[]> =>
         id
         name
         price
-        images(where: {is_primary: {_eq: true}}) {
+        slug
+        description
+        images {
           image_url
+          is_primary
         }
         category {
+          id
           name
           slug
+          description
+          created_at
+          updated_at
         }
         stock_quantity
-        slug
         created_at
+        updated_at
       }
     }
-  `,
-    { query: `%${query}%` }
-  );
+  `, { query: `%${query}%` });
 
   if (error) throw error;
 
   return data.products.map((product: NhostProduct) => ({
     id: product.id,
     name: product.name,
+    slug: product.slug,
+    description: product.description,
     price: product.price,
-    image: product.images[0]?.image_url || '/images/placeholder.jpg',
-    href: `/urunler/${product.slug}`,
-    category: product.category.name,
-    stock: product.stock_quantity,
-    isNew: new Date(product.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000,
+    images: product.images.map(img => img.image_url),
+    category: product.category,
+    created_at: product.created_at,
+    updated_at: product.updated_at
   }));
 });
 
@@ -374,15 +383,23 @@ export const getDiscountedProducts = cache(async (): Promise<Product[]> => {
         id
         name
         price
-        discount_price
-        images(where: {is_primary: {_eq: true}}) {
+        slug
+        description
+        images {
           image_url
+          is_primary
         }
         category {
+          id
           name
+          slug
+          description
+          created_at
+          updated_at
         }
         stock_quantity
-        slug
+        created_at
+        updated_at
       }
     }
   `);
@@ -392,11 +409,13 @@ export const getDiscountedProducts = cache(async (): Promise<Product[]> => {
   return data.products.map((product: NhostProduct) => ({
     id: product.id,
     name: product.name,
-    price: product.discount_price || product.price,
-    image: product.images[0]?.image_url || '/images/placeholder.jpg',
-    href: `/urunler/${product.slug}`,
-    category: product.category.name,
-    stock: product.stock_quantity,
+    slug: product.slug,
+    description: product.description,
+    price: product.price,
+    images: product.images.map(img => img.image_url),
+    category: product.category,
+    created_at: product.created_at,
+    updated_at: product.updated_at
   }));
 });
 
