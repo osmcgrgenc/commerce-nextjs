@@ -135,6 +135,7 @@ export const getFeaturedProducts = cache(async (): Promise<Product[]> => {
     price: product.price,
     images: product.images.map(img => img.image_url),
     category: product.category,
+    stock_quantity: product.stock_quantity,
     created_at: product.created_at,
     updated_at: product.updated_at
   }));
@@ -210,6 +211,7 @@ export const getNewArrivals = cache(async (): Promise<Product[]> => {
     price: product.price,
     images: product.images.map(img => img.image_url),
     category: product.category,
+    stock_quantity: product.stock_quantity,
     created_at: product.created_at,
     updated_at: product.updated_at
   }));
@@ -272,6 +274,7 @@ export const getCategoryDetails = cache(async (slug: string): Promise<{ category
       price: product.price,
       images: product.images.map(img => img.image_url),
       category: product.category,
+      stock_quantity: product.stock_quantity,
       created_at: product.created_at,
       updated_at: product.updated_at
     }))
@@ -319,6 +322,7 @@ export const getProductDetails = cache(async (slug: string): Promise<Product> =>
     price: product.price,
     images: product.images.map(img => img.image_url),
     category: product.category,
+    stock_quantity: product.stock_quantity,
     created_at: product.created_at,
     updated_at: product.updated_at
   };
@@ -370,6 +374,7 @@ export const searchProducts = cache(async (query: string): Promise<Product[]> =>
     price: product.price,
     images: product.images.map(img => img.image_url),
     category: product.category,
+    stock_quantity: product.stock_quantity,
     created_at: product.created_at,
     updated_at: product.updated_at
   }));
@@ -414,6 +419,7 @@ export const getDiscountedProducts = cache(async (): Promise<Product[]> => {
     price: product.price,
     images: product.images.map(img => img.image_url),
     category: product.category,
+    stock_quantity: product.stock_quantity,
     created_at: product.created_at,
     updated_at: product.updated_at
   }));
