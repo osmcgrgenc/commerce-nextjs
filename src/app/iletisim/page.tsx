@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useMutation } from '@tanstack/react-query';
-import { createContact } from '@/lib/nhost/mutations';
+import { useNhostClient } from '@nhost/nextjs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,29 +12,51 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    message: '',
+    subject: '',
+    message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const nhost = useNhostClient();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createContact,
-    onSuccess: () => {
-      toast.success('Mesajınız başarıyla gönderildi');
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await nhost.graphql.request(`
+        mutation CreateContact($name: String!, $email: String!, $subject: String!, $message: String!) {
+          insert_contacts_one(object: {
+            name: $name,
+            email: $email,
+            subject: $subject,
+            message: $message
+          }) {
+            id
+          }
+        }
+      `, {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message
+      });
+
+      if (error) throw error;
+
       setFormData({
         name: '',
         email: '',
-        phone: '',
-        message: '',
+        subject: '',
+        message: ''
       });
-    },
-    onError: () => {
-      toast.error('Mesajınız gönderilirken bir hata oluştu');
-    },
-  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutate(formData);
+      toast.success('Mesajınız başarıyla gönderildi');
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Bir hata oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -111,18 +132,19 @@ export default function ContactPage() {
 
             <div>
               <label
-                htmlFor="phone"
+                htmlFor="subject"
                 className="block text-sm font-medium text-gray-900"
               >
-                Telefon
+                Konu
               </label>
               <div className="mt-2">
                 <Input
-                  type="tel"
-                  name="phone"
-                  id="phone"
-                  value={formData.phone}
+                  type="text"
+                  name="subject"
+                  id="subject"
+                  value={formData.subject}
                   onChange={handleChange}
+                  required
                 />
               </div>
             </div>
@@ -146,8 +168,8 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <Button type="submit" disabled={isPending}>
-              {isPending ? 'Gönderiliyor...' : 'Gönder'}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Gönderiliyor...' : 'Gönder'}
             </Button>
           </form>
 

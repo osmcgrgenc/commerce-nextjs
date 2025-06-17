@@ -252,15 +252,8 @@ export async function getProducts(): Promise<Product[]> {
     description: product.description,
     price: product.price,
     images: product.images.map(img => img.image_url),
-    category: {
-      id: product.category.id,
-      name: product.category.name,
-      slug: product.category.slug,
-      description: product.category.description,
-      created_at: product.category.created_at,
-      updated_at: product.category.updated_at
-    },
-    stock_quantity: product.stock_quantity,
+    stock: product.stock_quantity,
+    status: 'active',
     created_at: product.created_at,
     updated_at: product.updated_at
   }));
@@ -305,15 +298,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     description: product.description,
     price: product.price,
     images: product.images.map(img => img.image_url),
-    category: {
-      id: product.category.id,
-      name: product.category.name,
-      slug: product.category.slug,
-      description: product.category.description,
-      created_at: product.category.created_at,
-      updated_at: product.category.updated_at
-    },
-    stock_quantity: product.stock_quantity,
+    stock: product.stock_quantity,
+    status: 'active',
     created_at: product.created_at,
     updated_at: product.updated_at
   };

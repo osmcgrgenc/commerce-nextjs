@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuthenticationStatus, useUserData, useUpdateUser } from '@nhost/nextjs';
+import { useAuthenticationStatus, useUserData, useUpdateUserData } from '@nhost/nextjs';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -9,8 +9,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
   const user = useUserData();
-  const { updateUser } = useUpdateUser();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const { updateUserData } = useUpdateUserData();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
@@ -41,19 +41,25 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsUpdating(true);
+    setIsSubmitting(true);
 
     try {
-      await updateUser({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phone: formData.phone,
+      const { error } = await updateUserData({
+        displayName: user?.displayName,
+        avatarUrl: user?.avatarUrl
       });
-      toast.success('Profil bilgileriniz güncellendi');
-    } catch (error) {
-      toast.error('Profil güncellenirken bir hata oluştu');
+
+      if (error) {
+        toast.error('Profil güncellenirken bir hata oluştu');
+        return;
+      }
+
+      toast.success('Profil başarıyla güncellendi');
+      router.push('/hesabim');
+    } catch {
+      toast.error('Bir hata oluştu');
     } finally {
-      setIsUpdating(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -125,10 +131,10 @@ export default function ProfilePage() {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  disabled={isUpdating}
+                  disabled={isSubmitting}
                   className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
                 >
-                  {isUpdating ? 'Güncelleniyor...' : 'Değişiklikleri Kaydet'}
+                  {isSubmitting ? 'Güncelleniyor...' : 'Değişiklikleri Kaydet'}
                 </button>
               </div>
             </form>

@@ -30,6 +30,12 @@ const eslintConfig = [
         ecmaFeatures: {
           jsx: true,
         },
+        project: './tsconfig.json',
+      },
+    },
+    settings: {
+      next: {
+        rootDir: __dirname,
       },
     },
     rules: {

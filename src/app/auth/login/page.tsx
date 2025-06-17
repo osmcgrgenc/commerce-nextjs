@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useSignInEmailPassword, useSignInWithOAuth } from '@nhost/react';
+import { useSignInEmailPassword, useSignInWithOAuth } from '@nhost/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signInEmailPassword, isLoading, error } = useSignInEmailPassword();
+  const { signInEmailPassword, isLoading, error: signInError } = useSignInEmailPassword();
   const { signInWithOAuth, isLoading: isProviderLoading } = useSignInWithOAuth();
   const router = useRouter();
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {error && <div className="text-red-500 text-sm text-center">{error.message}</div>}
+          {signInError && <div className="text-red-500 text-sm text-center">{signInError.message}</div>}
 
           <div>
             <button

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuthenticationStatus, useUserData, useUpdateUserData } from '@nhost/react';
+import { useAuthenticationStatus, useUserData, useUpdateUserData } from '@nhost/nextjs';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const { isAuthenticated, isLoading } = useAuthenticationStatus();
@@ -28,13 +29,22 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await updateUserData({
-      displayName,
-      avatarUrl,
-    });
 
-    if (!error) {
-      // Başarılı güncelleme mesajı göster
+    try {
+      const { error } = await updateUserData({
+        displayName: user?.displayName,
+        avatarUrl: user?.avatarUrl
+      });
+
+      if (error) {
+        toast.error('Profil güncellenirken bir hata oluştu');
+        return;
+      }
+
+      toast.success('Profil başarıyla güncellendi');
+      router.push('/profile');
+    } catch {
+      toast.error('Bir hata oluştu');
     }
   };
 

@@ -7,20 +7,12 @@ import { ProductCard } from '@/components/products/product-card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { generateMetadata } from '@/lib/metadata';
 
 interface CategoryPageProps {
   params: {
     slug: string;
   };
 }
-
-export const metadata = generateMetadata({
-  title: 'Kategoriler',
-  description:
-    'Liman Design ürün kategorileri. Mobilya, dekorasyon, aydınlatma ve daha fazlası. Her tarza uygun ürünler ve çözümler.',
-  image: '/images/categories-og.jpg',
-});
 
 export default function CategoryPage({ params }: CategoryPageProps) {
   const { data: category, isLoading, error } = useCategory(params.slug);
